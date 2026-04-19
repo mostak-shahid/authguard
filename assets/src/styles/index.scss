@@ -1,0 +1,75 @@
+.authguard-settings-template {
+    #wpcontent {
+        padding-left: 0;
+    }
+    input[type=color], input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], select, textarea {
+        border-radius: unset;
+        border: unset;
+        background-color: unset;
+    }
+}
+.color-picker-control {
+    .component-color-indicator {
+        width: 20px;
+        height: 20px;
+        flex: 0 0 20px;
+    }
+}
+.authguard-image-selector {
+    background: transparent;
+    display: grid;
+    /* Automatically creates as many columns as will fit, 
+    each at least 250px wide but expanding to fill available space (1fr) */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px; /* Adds space (gutters) between grid items */
+    .authguard-image-selected {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .semi-radio-checked {
+            .authguard-image-selected {
+                display: flex;
+            }
+        }
+    .semi-radio-addon-buttonRadio {        
+        padding: 0;
+        .image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            position: relative;
+            // border-radius: 14px;
+            overflow: hidden;
+            border-width: 1.5px;
+            border-style: solid;
+            border-image: initial;
+            background: rgb(24, 24, 29);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.25s, border-color 0.2s;
+            img {
+                width: 100%;
+                height: auto;
+            }
+            span {
+                font-size: 0.88rem;
+                font-weight: 500;
+                color: rgb(240, 240, 245);
+                margin: 0px 0px 2px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: inline-block;
+                padding: 12px 14px;
+            }
+        }
+    }
+}

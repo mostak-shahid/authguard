@@ -1,0 +1,302 @@
+Update Npm packages
+
+npm install -g npm-check-updates
+ncu -u
+npm install
+
+
+composer global require afragen/wp-devops
+
+
+wp package install wp-cli/dist-archive-command:@stable
+wp dist-archive wp-content/plugins/authguard authguard-v1.0.0.zip --plugin-dirname=authguard --filename-format='{slug}-{version}.zip'
+
+
+Final: go to the plugin folder
+# Clean vendor directory
+rm -rf vendor
+
+# Install prod-only dependencies
+composer install --no-dev --optimize-autoloader
+
+# Create the distribution zip
+rm -f composer.lock && rm -rf vendor && composer install --no-dev && composer dump-autoload -o
+wp dist-archive .
+
+
+
+
+
+svn
+----------------------------------------------------------------------------------------------------------------------------
+Your plugin **mos-product-specifications-tab** is hosted on the official WordPress.org repo:
+
+🔗 [https://wordpress.org/plugins/mos-product-specifications-tab/](https://wordpress.org/plugins/mos-product-specifications-tab/)
+
+That means you're using the standard WordPress SVN structure:
+
+```
+/trunk
+/tags
+/assets
+```
+
+Below is the **exact SVN workflow**, including **which directory to run each command from**.
+
+---
+
+# ✅ STANDARD WORDPRESS SVN RELEASE WORKFLOW
+
+Assuming your working copy root is:
+
+```
+mos-product-specifications-tab/
+```
+
+That folder contains:
+
+```
+.svn/
+assets/
+tags/
+trunk/
+```
+
+Everything below happens inside that root folder unless specified.
+
+---
+
+# 🟢 STEP 1 — Go To Plugin Root
+
+Run:
+
+```bash
+cd path/to/mos-product-specifications-tab
+```
+
+This is the folder that contains:
+
+```
+trunk/
+tags/
+assets/
+.svn/
+```
+
+---
+
+# 🟢 STEP 2 — Update From WordPress SVN
+
+Always update first:
+
+```bash
+svn update
+```
+
+📍 Run this in:
+
+```
+mos-product-specifications-tab/
+```
+
+---
+
+# 🟢 STEP 3 — Make Your Changes In trunk/
+
+All development changes go inside:
+
+```
+mos-product-specifications-tab/trunk/
+```
+
+* Update plugin version in:
+
+  * `trunk/mos-product-specifications-tab.php`
+  * `trunk/readme.txt`
+
+Example:
+
+```
+Stable tag: 1.0.2
+Version: 1.0.2
+```
+
+---
+
+# 🟢 STEP 4 — Check What Changed
+
+From root:
+
+```bash
+svn status
+```
+
+You’ll see:
+
+```
+M trunk/some-file.php
+? trunk/new-file.php
+```
+
+---
+
+# 🟢 STEP 5 — Add New Files (If Any)
+
+If `svn status` shows `?` files:
+
+```bash
+svn add trunk/new-file.php
+```
+
+Or add everything new inside trunk:
+
+```bash
+svn add trunk/* --force
+```
+
+📍 Run from root folder.
+
+---
+
+# 🟢 STEP 6 — Create New Tag
+
+Let’s say you're releasing:
+
+```
+1.0.2
+```
+
+Copy trunk to tags:
+
+```bash
+svn copy trunk tags/1.0.2
+```
+
+📍 Run from:
+
+```
+mos-product-specifications-tab/
+```
+
+This creates:
+
+```
+tags/1.0.2/
+```
+
+---
+
+# 🟢 STEP 7 — Add Tag Files (If Needed)
+
+If svn status shows new files inside the tag:
+
+```bash
+svn add tags/1.0.2 --force
+```
+
+Usually not needed if you copied correctly.
+
+---
+
+# 🟢 STEP 8 — Commit Everything
+
+From root:
+
+```bash
+svn commit -m "Release version 1.0.2"
+```
+
+📍 Run from:
+
+```
+mos-product-specifications-tab/
+```
+
+You’ll be prompted for your WordPress.org username & password.
+
+---
+
+# 🟢 STEP 9 — If You Changed Plugin Banners or Icons
+
+Assets folder is separate from trunk.
+
+If you modified:
+
+```
+assets/banner-772x250.png
+assets/icon-256x256.png
+```
+
+Then:
+
+```bash
+svn status
+svn add assets/* --force
+svn commit -m "Update plugin assets"
+```
+
+---
+
+# 🔵 COMPLETE RELEASE COMMAND SEQUENCE (COPY-PASTE SAFE)
+
+```bash
+cd path/to/mos-product-specifications-tab
+
+svn update
+
+svn status
+
+svn add trunk/* --force
+
+svn copy trunk tags/1.0.2
+
+svn commit -m "Release version 1.0.2"
+```
+
+---
+
+# 🟣 OPTIONAL: CLEAN WAY (PRO METHOD)
+
+If you want a cleaner workflow:
+
+```
+Development → trunk
+Release → tag
+Never edit inside tags manually
+```
+
+Only copy trunk to tag when releasing.
+
+---
+
+# 🚨 IMPORTANT CHECKLIST BEFORE COMMIT
+
+✔ Version updated in main plugin file
+✔ Stable tag updated in readme.txt
+✔ No debug code
+✔ No node_modules
+✔ No .map files unless required
+✔ No duplicate `.png.png` files (I noticed you have some)
+
+---
+
+# 🧠 If You Ever Need Fresh Checkout
+
+If something breaks:
+
+```bash
+svn checkout https://plugins.svn.wordpress.org/mos-product-specifications-tab/ mos-product-specifications-tab
+```
+
+Run this outside the current folder.
+
+---
+
+If you'd like, I can also give you:
+
+* 🔥 Automated bash release script
+* 🔥 Git → SVN deployment workflow
+* 🔥 How to use GitHub Actions to auto-deploy to WordPress SVN
+
+Just tell me your preferred workflow.
+

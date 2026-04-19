@@ -1,0 +1,97 @@
+:root {
+  --authguard-color: #720eec;
+  --authguard-color-light: #00a0d2;
+  --authguard-color-dark: #005177;
+  --authguard-color-accent: #f7f7f7;
+  --authguard-color-text: #333;
+  --authguard-color-text-light: #fff;
+  
+  --semi-color-bg-0: rgba(255, 255, 255, 1);
+  --semi-color-bg-1: rgba(255, 255, 255, 1);
+  --semi-color-bg-2: rgba(255, 255, 255, 1);
+  --semi-color-bg-3: rgba(255, 255, 255, 1);
+  --semi-color-bg-4: rgba(255, 255, 255, 1);
+}
+body[theme-mode=dark], body .semi-always-dark, :host([theme-mode=dark]), :host .semi-always-dark {  
+  --semi-color-bg-0: rgba(22, 22, 26, 1);
+  --semi-color-bg-1: rgba(35, 36, 41, 1);
+  --semi-color-bg-2: rgba(53, 54, 60, 1);
+  --semi-color-bg-3: rgba(67, 68, 74, 1);
+  --semi-color-bg-4: rgba(79, 81, 89, 1);
+}
+.authguard-settings-template {
+  position: relative;
+  #wpadminbar, #adminmenuwrap {
+    z-index: 999;
+  }
+  #wpcontent {
+    padding-left: 0;
+    #wpbody {
+      #wpbody-content {
+        padding-bottom: 0;
+      }
+    }
+  }
+  #wpfooter {
+    display: none;
+  }  
+}
+ul#adminmenu {
+  li.toplevel_page_authguard {
+    .wp-menu-image {
+      img {
+      display: inline-block;
+      }
+    }
+    &.current {
+      > a {
+        &::after {
+          border-right-color: var(--semi-color-bg-1);
+        }
+      }
+    }
+  }
+}
+
+#password-modal {
+  display: none;
+  position: fixed;
+  z-index: 999999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 400px;
+            border-radius: 5px;
+        }
+        .modal-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        .modal-body {
+            margin-bottom: 15px;
+        }
+        .modal-footer {
+            text-align: right;
+        }
+        .modal-input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        .modal-error {
+            color: #dc3232;
+            margin-top: 10px;
+            display: none;
+        }
+}

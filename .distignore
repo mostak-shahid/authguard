@@ -1,0 +1,67 @@
+# CI / tooling
+.circleci/
+.github/
+.gitlab-ci.yml
+.travis.yml
+bitbucket-pipelines.yml
+
+# Dependency & build tools
+node_modules/
+bin/
+composer.lock
+package.json
+package-lock.json
+yarn.lock
+webpack.config.js
+postcss.config.js
+tailwind.config.js
+Gruntfile.js
+.babelrc
+.eslintrc
+.eslintignore
+
+# Source & tests
+docs/
+src/
+assets/src/
+tests/
+Resources/
+includes/CLI/
+
+# Git / meta
+.git/
+.gitattributes
+.gitignore
+.distignore
+.deployignore
+.editorconfig
+.DS_Store
+Thumbs.db
+.*~
+
+# PHP tooling
+phpunit.xml
+phpunit.xml.dist
+.phpcs.xml
+.phpcs.xml.dist
+phpcs.xml
+behat.yml
+
+# Misc config
+multisite.xml
+multisite.xml.dist
+wp-cli.local.yml
+dependencies.yml
+README.md
+
+# Archives & dumps
+**/*.sql
+**/*.zip
+**/*.tar.gz
+**/*.tmp
+
+# Styles & maps (IMPORTANT)
+**/*.scss
+**/*.map
+**/*.css.map
+**/*.js.LICENSE.txt

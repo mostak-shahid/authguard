@@ -1,0 +1,203 @@
+Free Captcha
+https://www.jqueryscript.net/form/Icon-Captcha-jQuery-PHP.html
+https://www.jqueryscript.net/other/alphanumeric-captcha.html
+https://www.jqueryscript.net/form/image-puzzle-slider-captcha.html
+https://www.jqueryscript.net/form/Basic-Math-Captcha-Plugin.html
+
+Paid:
+hCaptcha
+reCAPTCHA
+Cloudflare Turnstile
+
+Header Menu
+1. Dashboard
+2. Settings
+3. Analytics
+
+Analytics
+    DataTable
+        1. FAQs Title
+        2. Category
+        3. Impression
+        4. Liked
+        5. Disliked
+    Line chart
+        x axis time (month)
+        y axis impression,liked, disliked
+
+Settings Menu
+
+Customizer
+    Redesign
+    Redirect
+        Login URL
+
+Login Security
+    Password Policies
+    Use Master Password
+    Capthcha
+        reCAPTCHA
+        Cloudflare Turnstile
+        Math Capthcha
+        Question Capthcha
+        Image Capthcha
+    Two Factor Authentication
+
+Passwordless Login
+    URL Based Login
+    QR Code based Login
+    Spcial Media Login
+    Passkeys
+
+Tuning up
+    User (Based Last login time)
+    Session 
+
+Restrictions
+    Brute Force 
+    IP Restrictions
+    GEO Restrictions
+    Bot Restrictions
+    Email Restrictions
+    Username Restrictions
+    Sessions Restrictions
+
+
+=================================================================================
+Here’s a list of **passwordless login methods** that are commonly used today:
+
+---
+
+### 🔑 **Biometric Authentication**
+
+* **Fingerprint** (Touch ID, Android fingerprint scanner)
+* **Face recognition** (Face ID, Windows Hello, Android Face Unlock)
+* **Iris/retina scan**
+* **Voice recognition**
+
+---
+
+### 📧 **Magic Links**
+
+* User enters email → system sends a one-time secure link → clicking logs them in.
+
+---
+
+### 🔢 **One-Time Codes (OTP)**
+
+* **Email OTP** – temporary code sent via email.
+* **SMS OTP** – temporary code sent via SMS.
+* **App-generated OTP** – code from an authenticator app (e.g., Google Authenticator, Authy).
+* **Push notification approval** – approve login directly from an app.
+
+---
+
+### 🔐 **Security Keys & Hardware Tokens**
+
+* **FIDO2 / WebAuthn keys** (YubiKey, Feitian, SoloKey).
+* **Smart cards**.
+* **Bluetooth/NFC tokens**.
+
+---
+
+### 📲 **Device-based Authentication**
+
+* **Trusted device recognition** (login only from pre-verified devices).
+* **Mobile app confirmation** (approve login request inside an official app).
+
+---
+
+### 🌍 **Social & Identity Providers (Passwordless Mode)**
+
+* **Sign in with Google / Apple / Microsoft / Facebook**, etc., without a password (using OAuth + biometrics or device trust).
+
+---
+
+### 🖥️ **OS-Level Authentication**
+
+* **Windows Hello** (biometrics, PIN tied to device TPM).
+* **macOS Keychain / Touch ID**.
+* **Android passkeys** (Google passkeys, synced across devices).
+* **Apple Passkeys (iCloud Keychain)**.
+
+---
+
+### 🆕 **Passkeys (FIDO2/WebAuthn)**
+
+* Public–private key cryptography replaces passwords.
+* Synced across devices (via iCloud, Google Password Manager, 1Password, etc.).
+* Works on web + apps (supported by Apple, Google, Microsoft).
+
+---
+
+👉 Do you want me to also make a **comparison table** (pros/cons, security level, usability) for these methods?
+
+===============================================================================================================
+Here’s a list of **popularly used CAPTCHA systems** (still active and widely adopted):
+
+---
+
+### 🔹 **Google reCAPTCHA**
+
+* **reCAPTCHA v2**: “I’m not a robot” checkbox + image challenges.
+* **reCAPTCHA v3**: Invisible, risk-based scoring without user interaction.
+* **reCAPTCHA Enterprise**: Advanced bot protection for businesses.
+
+---
+
+### 🔹 **hCaptcha**
+
+* Privacy-focused alternative to reCAPTCHA.
+* Offers both free and enterprise versions.
+* Can pay site owners for solving CAPTCHAs (used by Cloudflare).
+
+---
+
+### 🔹 **FunCaptcha (Arkose Labs)**
+
+* Replaces text/image puzzles with **interactive mini-games** (e.g., rotate objects upright).
+* Focuses on usability and bot resistance.
+
+---
+
+### 🔹 **Geetest CAPTCHA**
+
+* **Slide-based** CAPTCHA (drag puzzle piece into place).
+* Popular in Asia; widely used in banking, gaming, and e-commerce sites.
+
+---
+
+### 🔹 **Confident CAPTCHA**
+
+* Image-based challenge that requires selecting correct objects.
+* Accessibility support with audio alternatives.
+
+---
+
+### 🔹 **Are You a Human (PlayThru)**
+
+* Replaced by other services, but pioneered **game-based CAPTCHAs**.
+* Example: “Drag the cookie into the cookie jar.”
+
+---
+
+### 🔹 **Custom/Native CAPTCHA**
+
+* **Math CAPTCHAs** (e.g., “What is 3 + 7?”).
+* **Text distortion CAPTCHAs** (traditional distorted letters/numbers).
+* **Logic-based CAPTCHAs** (simple question/answer).
+
+---
+
+✅ Today, the most **commonly used** are:
+
+* **Google reCAPTCHA** (most popular, but privacy concerns).
+* **hCaptcha** (privacy-friendly, often used by companies avoiding Google).
+* **Geetest** (especially in Asia).
+* **FunCaptcha (Arkose Labs)** (used by gaming and fintech).
+
+---
+
+Do you want me to also make a **comparison table** (ease of use, security, privacy, adoption level) between these CAPTCHA systems?
+
+

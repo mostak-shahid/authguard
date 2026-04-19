@@ -1,0 +1,44 @@
+.authguard-login-page {
+    .forgetmenot,
+    .submit {
+        float: none;
+        clear: both;
+    }
+    form {
+        .submit {
+            .button-primary{
+                width: 100%;
+                float: none;
+                clear: both;
+            }
+        }
+    }
+    #nav {
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+    }
+    .authguard-seprator {
+        display: none;
+    }
+    #backtoblog {
+        padding: 0;
+        float: left;
+    }
+    .privacy-policy-page-link {
+        margin: 16px 0;
+        float: right;
+        width: auto;
+    }
+    .authguard-2fa-wrapper {
+        button.button { 
+            display: block; 
+            margin-bottom: 10px; 
+            float: none; 
+            clear: both; 
+            width: 100%;
+        }        
+        .authguard-2fa-secondary { margin-top:12px; }
+        .authguard-2fa-help { font-size:13px; color:#50575e; margin-top:18px; }
+    }
+}

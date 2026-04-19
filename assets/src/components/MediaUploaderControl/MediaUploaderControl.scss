@@ -1,0 +1,63 @@
+.authguard-media-uploader-unit {
+  .media-uploader {
+    .file-name {
+      position: relative;
+      margin-top: 12px;
+      border: 1px dashed #dcdcde;
+      border-radius: 4px;
+      padding: 4px;
+      cursor: pointer;
+      img {
+        cursor: pointer;
+      }
+      .uploaded-image {
+        width: 100%;
+        height: auto;
+      }
+      .authguard-remove-image {
+        position: absolute;
+        top: -12px;
+        right: -12px;
+        cursor: pointer;
+      }
+      .no-media-wrap {
+        padding: 30px;
+        .img-wrap {
+          border-radius: 50rem;
+          border: 5px solid #8185c933;
+          margin-bottom: 6px;
+          width: 36px;
+          height: 36px;
+          margin-left: auto;
+          margin-right: auto;
+          padding: 4px;
+          > * {
+            display: inline-block;
+            vertical-align: top;
+            color: #8185c933;
+            font-size: 18px;
+          }
+        }
+        .text-wrap {
+          * {
+            display: block;
+            text-align: center;
+          }
+          .title {
+            color: #0c0c0c;
+            font-weight: 500;
+            font-size: 12px;
+            line-height: 14.06px;
+            margin-bottom: 4px;
+          }
+          .sub-title {
+            color: #7c828b;
+            font-weight: 400;
+            font-size: 10px;
+            line-height: 14px;
+          }
+        }
+      }
+    }
+  }
+}

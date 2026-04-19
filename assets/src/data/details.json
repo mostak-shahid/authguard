@@ -1,0 +1,8 @@
+{
+  "name": "AuthGuard",
+  "description": "AuthGuard is a powerful WordPress Login Page Customizer that lets you fully redesign the wp-login page, register form, and forgot password screen while enhancing security and user experience.",
+  "version": "1.0.0",
+  "author": "Md. Mostak Shahid",
+  "authorURI": "https://mostak-shahid.github.io/",
+  "pluginURI": "https://mostak-shahid.github.io/plugins/authguard.html"
+}

@@ -1,0 +1,34 @@
+{
+  "name": "mospress/authguard",
+  "description": "AuthGuard is a powerful WordPress Login Page Customizer that lets you fully redesign the wp-login page, register form, and forgot password screen while enhancing security and user experience.",
+  "type": "wordpress-plugin",
+  "license": "GPLv2",
+  "autoload": {
+    "psr-4": {
+      "MosPress\\Authpress\\": "includes/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Md. Mostak Shahid",
+      "email": "mostak.shahid@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require-dev": {
+    "wp-cli/wp-cli": "^2.0",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+    "wp-coding-standards/wpcs": "^3.1",
+    "wp-cli/i18n-command": "^2"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+
+  "require": {},
+  "scripts": {
+    "makepot": "wp i18n make-pot ."
+  }
+}

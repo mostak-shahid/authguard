@@ -1,0 +1,186 @@
+[
+    {
+        "itemKey": "customizer",
+        "text": "Customizer",
+        "description": "Customizer settings for login page",
+        "url": "/settings/customizer",
+        "items": [
+            {
+                "itemKey": "presets",
+                "text": "Presets",
+                "description": "Choose from a variety of pre-designed templates to quickly customize the appearance of your login page. These presets are crafted to suit different styles and preferences, allowing you to effortlessly enhance the look and feel of your login experience.",
+                "url": "/settings/customizer/presets"
+            },
+            {
+                "itemKey": "personalize",
+                "text": "Personalize",
+                "description": "Customize the appearance and behavior of your login page.",
+                "url": "/settings/customizer/personalize",
+                "items": [
+                    {
+                        "itemKey": "background",
+                        "text": "Background",
+                        "description": "Customize the background of your login page.",
+                        "url": "/settings/customizer/personalize/background"                
+                    },
+                    {
+                        "itemKey": "logo",
+                        "text": "Logo",
+                        "description": "Customize the logo displayed on your login page.",
+                        "url": "/settings/customizer/personalize/logo"                
+                    },
+                    {
+                        "itemKey": "fields",
+                        "text": "Fields",
+                        "description": "Customize the fields displayed on your login page.",
+                        "url": "/settings/customizer/personalize/fields"
+                    },
+                    {
+                        "itemKey": "button",
+                        "text": "Button",
+                        "description": "Customize the button displayed on your login page.",
+                        "url": "/settings/customizer/personalize/button"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "itemKey": "security",
+        "text": "Security",
+        "description": "Protect your login page with advanced security features",
+        "url": "/settings/security",
+        "items": [
+            {
+                "itemKey": "captchas",
+                "text": "Captchas",
+                "description": "CAPTCHA Settings to protect your login page from bots and spam. Choose from various CAPTCHA types, such as reCAPTCHA, hCaptcha, or math CAPTCHA, to enhance the security of your login process. Configure the settings to suit your needs and keep unwanted access at bay.",
+                "url": "/settings/captchas"
+            },
+            {
+                "itemKey": "two_fa_authentication",
+                "text": "Two-Factor Authentication",
+                "description": "Two-Factor Authentication Settings to enhance the security of your login process. Choose from various 2FA methods, such as email OTP, TOTP, or HOTP, to add an extra layer of protection to your login page. Configure the settings to suit your needs and keep your site secure from unauthorized access.",
+                "url": "/settings/two-fa-authentication",        
+                "items": [
+                    {
+                        "itemKey": "settings",
+                        "text": "Settings",
+                        "description": "Settings for Two-Factor Authentication",
+                        "url": "/settings/two-fa-authentication/settings"
+                    },
+                    {
+                        "itemKey": "two-fa-audit-logs",
+                        "text": "Audit Logs",
+                        "description": "View and manage audit logs for Two-Factor Authentication",
+                        "url": "/settings/two-fa-authentication/audit-logs"
+                    }
+                ]
+            },
+            {
+                "itemKey": "limit-login-attempts",
+                "text": "Limit Login Attempts",
+                "description": "Everybody needs a control of their Login page. This will help you to track your login attempts by each user. You can limit the login attempts for each user. Brute force attacks are the most common way to gain access to your website. This add-on acts as a sheild to these hacking attacks and gives you control to set the time between each login attempts.",
+                "url": "/settings/limit-login-attempts"
+            },
+            {
+                "itemKey": "password-policy",
+                "text": "Password Policy",
+                "description": "This LoginPress add-on lets you set a strong password policy for your users. You can set the minimum password length, require special characters, numbers, and uppercase letters. This will help you to ensure that your users are using strong passwords to protect their accounts and your website.",
+                "url": "/settings/password-policy"
+            },
+            {
+                "itemKey": "hide-login",
+                "text": "Hide Login",
+                "description": "This LoginPress add-on lets you change the login page URL to anything you want. It will give a hard time to spammers who keep hitting to your login page. This is helpful for Brute force attacks. One caution to use this add-on is you need to remember the custom login url after you change it. We have an option to email your custom login url so you remember it.",
+                "url": "/settings/hide-login"
+            }
+        ]
+    },
+    {
+        "itemKey": "user-access",
+        "text": "User Access",
+        "description": "Manage user access and login behavior",
+        "url": "/settings/user-access",
+        "items": [
+            {
+                "itemKey": "auto-login",
+                "text": "Auto Login",
+                "description": "This LoginPress add-on lets your users generates a unique URL from login page who you don't want to provide a password to login into your site. The generated URL will be sent to the user's email address. This is helpful for those users who don't want to remember their password or you want to provide a temporary access to your site without sharing the password. You can set the expiration time for the generated URL and also limit the number of times it can be used.",
+                "url": "/settings/auto-login"
+            },
+            {
+                "itemKey": "login-redirects",
+                "text": "Login Redirects",
+                "description": "Redirect users based on their roles and specific usernames. This is helpful, If you have an editor and want to redirect him to his editor stats page. Restrict your subscribers, guests or even customers to certain pages instead of wp-admin. This add-on has a cool UX/UI to manage all the login redirects you have created on your site.",
+                "url": "/settings/login-redirects"
+            }
+        ]
+    },
+    {
+        "itemKey": "data-logs",
+        "text": "Data & Logs",
+        "description": "Manage data and view activity logs",
+        "url": "/settings/data-logs",
+        "items": [
+            {
+                "itemKey": "import-export",
+                "text": "Import & Export",
+                "description": "Easily import or export plugin settings for backup, migration, or reuse.",
+                "url": "/settings/import-export"
+            },
+            {
+                "itemKey": "logs",
+                "text": "Logs",
+                "description": "Review and manage plugin activity logs.",
+                "url": "/settings/logs",
+                "items": [
+                    {
+                        "itemKey": "table",
+                        "text": "Table",
+                        "description": "Browse detailed logs in a searchable table view.",
+                        "url": "/settings/logs/table"
+                    },
+                    {
+                        "itemKey": "analytics",
+                        "text": "Analytics",
+                        "description": "Analyze log data with charts and usage insights.",
+                        "url": "/settings/logs/analytics"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "itemKey": "utilities",
+        "text": "Utilities",
+        "description": "Additional tools and settings",
+        "url": "/settings/utilities",
+        "items": [
+            {
+                "itemKey": "tools",
+                "text": "Tools",
+                "description": "Access helpful utilities for maintenance, debugging, and optimization.",
+                "url": "/settings/tools"
+            },
+            {
+                "itemKey": "misc",
+                "text": "MISC",
+                "description": "This section includes various miscellaneous settings that don't fit into the other categories but are essential for customizing and optimizing your plugin experience.",
+                "url": "/settings/misc"
+            },
+            {
+                "itemKey": "more",
+                "text": "More",
+                "description": "Enable additional features, extensions, and advanced options.",
+                "url": "/settings/more"
+            }
+        ]
+    },
+    {
+        "itemKey": "feedback",
+        "text": "Feedback",
+        "description": "Share feedback, report issues, or suggest improvements.",
+        "url": "/feedback"
+    }
+]

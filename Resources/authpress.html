@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AuthGuard - WordPress Login Page Customizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --sidebar-w: 280px;
+      --accent: #f0522a;
+      --accent2: #ffc947;
+      --dark: #0f0e0d;
+      --surface: #1a1917;
+      --surface2: #252320;
+      --border: #2e2c29;
+      --text: #e8e4df;
+      --muted: #7a7368;
+      --nav-link: #b0a99f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      background: rgba(15,14,13,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      z-index: 1100;
+      gap: 12px;
+    }
+    .topbar-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .topbar-brand span { color: var(--accent); }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      overflow-x: hidden;
+      z-index: 1000;
+      padding: 16px 0 40px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    /* ── NAV SECTIONS ── */
+    .nav-section-label {
+      font-family: 'Syne', sans-serif;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 20px 20px 6px;
+    }
+
+    /* ── NAV ITEMS ── */
+    #sidebar-nav .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 20px;
+      font-size: .875rem;
+      color: var(--nav-link);
+      border-radius: 0;
+      border-left: 2px solid transparent;
+      transition: color .15s, background .15s, border-color .15s;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    #sidebar-nav .nav-link:hover {
+      color: var(--text);
+      background: rgba(255,255,255,.04);
+    }
+    #sidebar-nav .nav-link.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      background: rgba(240,82,42,.07);
+      font-weight: 500;
+    }
+    #sidebar-nav .nav-link i {
+      font-size: .95rem;
+      flex-shrink: 0;
+      width: 18px;
+      text-align: center;
+    }
+
+    /* ── COLLAPSIBLE PARENT ── */
+    .nav-toggle {
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      justify-content: space-between;
+    }
+    .nav-toggle .chevron {
+      font-size: .7rem;
+      color: var(--muted);
+      transition: transform .25s;
+      margin-left: auto;
+    }
+    .nav-toggle[aria-expanded="true"] .chevron { transform: rotate(90deg); }
+    .nav-toggle[aria-expanded="true"] { color: var(--text); }
+
+    /* ── SUBMENU L2 ── */
+    .nav-sub {
+      padding-left: 38px;
+    }
+    .nav-sub .nav-link {
+      font-size: .825rem;
+      padding: 5px 20px 5px 0;
+      border-left: none;
+      position: relative;
+    }
+    .nav-sub .nav-link::before {
+      content: '';
+      position: absolute;
+      left: -18px;
+      top: 50%;
+      width: 12px;
+      height: 1px;
+      background: var(--border);
+    }
+    .nav-sub .nav-link.active {
+      color: var(--accent2);
+      background: none;
+    }
+    .nav-sub .nav-link.active::before { background: var(--accent2); }
+
+    /* ── SUBMENU L3 ── */
+    .nav-sub-sub {
+      padding-left: 20px;
+    }
+    .nav-sub-sub .nav-link {
+      font-size: .775rem;
+      padding: 4px 16px 4px 0;
+      color: #6e6760;
+    }
+    .nav-sub-sub .nav-link:hover { color: var(--muted); }
+    .nav-sub-sub .nav-link.active { color: var(--accent); }
+    .nav-sub-sub .nav-link::before { left: -14px; width: 8px; }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      margin-top: 56px;
+      padding: 60px 64px;
+      max-width: calc(100% - var(--sidebar-w));
+    }
+
+    /* ── SECTIONS ── */
+    .doc-section {
+      padding-top: 24px;
+      margin-bottom: 80px;
+    }
+    .doc-section h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: -.03em;
+      margin-bottom: 8px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .doc-section h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin: 40px 0 12px;
+      color: var(--text);
+    }
+    .doc-section h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 28px 0 8px;
+      color: var(--muted);
+    }
+    .doc-section p {
+      color: #a09890;
+      line-height: 1.8;
+      max-width: 680px;
+    }
+
+    /* Accent tag */
+    .section-tag {
+      display: inline-block;
+      font-family: 'Syne', sans-serif;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 3px;
+      padding: 2px 8px;
+      margin-bottom: 12px;
+    }
+
+    /* Code block */
+    .code-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      font-size: .8rem;
+      font-family: 'DM Mono', 'Courier New', monospace;
+      color: #c8bfb5;
+      overflow-x: auto;
+      margin: 16px 0;
+      line-height: 1.7;
+    }
+    .code-block .kw { color: #f0522a; }
+    .code-block .str { color: #ffc947; }
+    .code-block .cm { color: #5a5450; font-style: italic; }
+
+    /* Card */
+    .feature-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: border-color .2s;
+    }
+    .feature-card:hover { border-color: var(--accent); }
+    .feature-card h5 {
+      font-family: 'Syne', sans-serif;
+      font-size: .95rem;
+      margin-bottom: 6px;
+    }
+    .feature-card p { font-size: .85rem; margin: 0; }
+
+    /* Pills */
+    .badge-pill {
+      display: inline-block;
+      background: rgba(240,82,42,.15);
+      color: var(--accent);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: .75rem;
+      font-weight: 500;
+      margin: 4px 4px 4px 0;
+    }
+    .badge-pill.alt {
+      background: rgba(255,201,71,.1);
+      color: var(--accent2);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* Collapse animation */
+    .collapse { transition: none; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; max-width: 100%; padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <a class="topbar-brand" href="#">Auth<span>Press</span></a>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <nav id="sidebar-nav">
+
+    <!-- SECTION 1: Getting Started -->
+    <div class="nav-section-label">Getting Started</div>
+
+    <a class="nav-link" href="#introduction">
+      <i class="bi bi-house-door"></i> Introduction
+    </a>
+
+    <!-- Collapsible: Installation -->
+    <button class="nav-link nav-toggle" type="button"
+            data-bs-toggle="collapse" data-bs-target="#collapseInstall"
+            aria-expanded="false" aria-controls="collapseInstall">
+      <i class="bi bi-download"></i> Installation
+      <i class="bi bi-chevron-right chevron"></i>
+    </button>
+    <div class="collapse" id="collapseInstall">
+      <nav class="nav-sub flex-column nav">
+        <a class="nav-link" href="#install-requirements">Requirements</a>
+        <a class="nav-link" href="#install-wordpress">WordPress Install</a>
+        <a class="nav-link" href="#install-composer">Composer</a>
+      </nav>
+    </div>
+
+    <!-- SECTION 2: Features -->
+    <div class="nav-section-label">Features</div>
+
+    <!-- Collapsible: Customization -->
+    <button class="nav-link nav-toggle" type="button"
+            data-bs-toggle="collapse" data-bs-target="#collapseCustomizer"
+            aria-expanded="false" aria-controls="collapseCustomizer">
+      <i class="bi bi-palette"></i> Login Customizer
+      <i class="bi bi-chevron-right chevron"></i>
+    </button>
+    <div class="collapse" id="collapseCustomizer">
+      <nav class="nav-sub flex-column nav">
+        <a class="nav-link" href="#customizer-background">Background</a>
+        <a class="nav-link" href="#customizer-logo">Logo</a>
+        <a class="nav-link" href="#customizer-form">Form Styling</a>
+
+        <!-- L3 under Form -->
+        <button class="nav-link nav-toggle ps-0" type="button"
+                data-bs-toggle="collapse" data-bs-target="#collapseFormSub"
+                aria-expanded="false" aria-controls="collapseFormSub"
+                style="padding-left:0!important;font-size:.775rem">
+          Form Components
+          <i class="bi bi-chevron-right chevron"></i>
+        </button>
+        <div class="collapse" id="collapseFormSub">
+          <nav class="nav-sub-sub flex-column nav">
+            <a class="nav-link" href="#form-fields">Fields</a>
+            <a class="nav-link" href="#form-button">Button</a>
+          </nav>
+        </div>
+
+        <a class="nav-link" href="#customizer-other">Other Options</a>
+      </nav>
+    </div>
+
+    <!-- Collapsible: Security -->
+    <button class="nav-link nav-toggle" type="button"
+            data-bs-toggle="collapse" data-bs-target="#collapseSecurity"
+            aria-expanded="false" aria-controls="collapseSecurity">
+      <i class="bi bi-shield-lock"></i> Security Features
+      <i class="bi bi-chevron-right chevron"></i>
+    </button>
+    <div class="collapse" id="collapseSecurity">
+      <nav class="nav-sub flex-column nav">
+        <a class="nav-link" href="#security-2fa">Two-Factor Authentication</a>
+        <a class="nav-link" href="#security-limit">Limit Login Attempts</a>
+        <a class="nav-link" href="#security-hide">Hide Login Page</a>
+        <a class="nav-link" href="#security-captcha">Math Captcha</a>
+      </nav>
+    </div>
+
+    <a class="nav-link" href="#redirects">
+      <i class="bi bi-arrow-return-left"></i> Login Redirects
+    </a>
+
+    <a class="nav-link" href="#auto-login">
+      <i class="bi bi-lightning"></i> Auto Login
+    </a>
+
+    <!-- SECTION 3: Developer -->
+    <div class="nav-section-label">Developer</div>
+
+    <a class="nav-link" href="#architecture">
+      <i class="bi bi-diagram-3"></i> Architecture
+    </a>
+
+    <button class="nav-link nav-toggle" type="button"
+            data-bs-toggle="collapse" data-bs-target="#collapseAPI"
+            aria-expanded="true" aria-controls="collapseAPI">
+      <i class="bi bi-code-slash"></i> API Reference
+      <i class="bi bi-chevron-right chevron"></i>
+    </button>
+    <div class="collapse show" id="collapseAPI">
+      <nav class="nav-sub flex-column nav">
+        <a class="nav-link" href="#api-rest">REST Endpoints</a>
+        <a class="nav-link" href="#api-ajax">AJAX Actions</a>
+        <a class="nav-link" href="#api-hooks">Hooks & Filters</a>
+      </nav>
+    </div>
+
+    <a class="nav-link" href="#changelog">
+      <i class="bi bi-clock-history"></i> Changelog
+    </a>
+
+  </nav>
+</nav>
+
+<!-- MAIN CONTENT (Scrollspy target) -->
+<main class="main-content"
+      data-bs-spy="scroll"
+      data-bs-target="#sidebar-nav"
+      data-bs-smooth-scroll="true"
+      data-bs-offset="80"
+      tabindex="0">
+
+  <!-- Introduction -->
+  <section id="introduction" class="doc-section">
+    <div class="section-tag">Overview</div>
+    <h2>Introduction</h2>
+    <p>AuthGuard is a powerful WordPress Login Page Customizer that lets you fully redesign the wp-login page, register form, and forgot password screen while enhancing security and user experience. Transform your default WordPress login into a professional, branded experience.</p>
+    <p>Built with modern PHP architecture and React for the admin interface, AuthGuard provides comprehensive customization options coupled with robust security features to protect your site from unauthorized access.</p>
+    <div class="row g-3 mt-2">
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5><i class="bi bi-palette me-2" style="color:var(--accent)"></i>Visual Customizer</h5>
+          <p>Full control over login page design including backgrounds, logos, forms, and buttons.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5><i class="bi bi-shield-lock me-2" style="color:var(--accent2)"></i>Security Suite</h5>
+          <p>2FA, login limiting, CAPTCHA, and custom login URLs for enhanced protection.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5><i class="bi bi-gear me-2" style="color:var(--accent)"></i>Developer Friendly</h5>
+          <p>PSR-4 architecture, REST API, WP-CLI commands, and extensive hooks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation -->
+  <section id="install-requirements" class="doc-section">
+    <div class="section-tag">Installation</div>
+    <h2>Requirements</h2>
+    <p>Before installing, ensure your environment meets the following requirements:</p>
+    <span class="badge-pill">WordPress ≥ 5.8</span>
+    <span class="badge-pill">PHP ≥ 7.4</span>
+    <span class="badge-pill alt">MySQL 5.6+</span>
+    <span class="badge-pill alt">Node.js ≥ 18 (for development)</span>
+    <p class="mt-3">AuthGuard requires PHP 7.4 or higher with the following extensions: mbstring, json, openssl, and mysqli. For development, Node.js and npm are required to build assets.</p>
+  </section>
+
+  <section id="install-wordpress" class="doc-section">
+    <h3>WordPress Install</h3>
+    <p>The easiest way to install AuthGuard is through the WordPress admin panel. Navigate to Plugins → Add New, search for "AuthGuard", and click Install Now. Alternatively, upload the plugin zip file manually.</p>
+    <div class="code-block">
+<span class="cm"># Extract the plugin to wp-content/plugins/authguard</span>
+wp plugin install authguard.zip --activate
+    </div>
+  </section>
+
+  <section id="install-composer" class="doc-section">
+    <h3>Composer</h3>
+    <p>For development or custom installations, install via Composer to handle PHP dependencies automatically.</p>
+    <div class="code-block">
+<span class="cm"># Install dependencies</span>
+composer install
+
+<span class="cm"># Install and build JavaScript assets</span>
+npm install
+npm run build
+    </div>
+  </section>
+
+  <!-- Customizer -->
+  <section id="customizer-background" class="doc-section">
+    <div class="section-tag">Login Customizer</div>
+    <h2>Background</h2>
+    <p>Customize the login page background with color, images, gradients, or video backgrounds. Add overlay effects and glass morphism for modern designs. Backgrounds support all standard CSS properties.</p>
+    <div class="code-block">
+<span class="cm">// Background options include:</span>
+type: 'color' | 'image' | 'gradient' | 'video'
+overlay: string <span class="cm">// CSS color value</span>
+image: { url: string, position: string, size: string, repeat: string }
+video: string <span class="cm">// Video URL (supports YouTube and local files)</span>
+    </div>
+  </section>
+
+  <section id="customizer-logo" class="doc-section">
+    <h3>Logo</h3>
+    <p>Replace the default WordPress logo with your own branding. Control size, spacing, and link destination. Disable the logo entirely for minimalist designs.</p>
+    <span class="badge-pill">Custom Image</span>
+    <span class="badge-pill">Width/Height Control</span>
+    <span class="badge-pill alt">Custom URL</span>
+  </section>
+
+  <section id="customizer-form" class="doc-section">
+    <h3>Form Styling</h3>
+    <p>Comprehensive form customization including wrapper styling, positioning, background, borders, padding, and glass effects. Support for left, right, and center alignment.</p>
+  </section>
+
+  <section id="form-fields" class="doc-section">
+    <h4>Fields</h4>
+    <p>Customize input fields with full control over width, height, padding, margin, background, border, border-radius, and box-shadow. Typography options for labels and placeholders.</p>
+  </section>
+
+  <section id="form-button" class="doc-section">
+    <h4>Button</h4>
+    <p>Style the submit button with normal, hover, and active states. Control background color, text color, padding, margin, border, border-radius, box-shadow, and text-shadow.</p>
+  </section>
+
+  <section id="customizer-other" class="doc-section">
+    <h3>Other Options</h3>
+    <p>Additional customization options for login page behavior and elements:</p>
+    <span class="badge-pill">Disable Remember Me</span>
+    <span class="badge-pill">Disable Lost Password</span>
+    <span class="badge-pill">Disable Registration</span>
+    <span class="badge-pill alt">Disable Back to Site</span>
+    <span class="badge-pill alt">Login by Username/Email/Both</span>
+    <span class="badge-pill alt">Registration with Password</span>
+  </section>
+
+  <!-- Security -->
+  <section id="security-2fa" class="doc-section">
+    <div class="section-tag">Security Features</div>
+    <h2>Two-Factor Authentication</h2>
+    <p>Add an extra layer of security with email-based two-factor authentication. Users receive a 6-digit verification code via email after successful password authentication. Codes expire after 5 minutes.</p>
+    <div class="code-block">
+<span class="cm">// 2FA Configuration</span>
+code_ttl: 300 <span class="cm">// seconds (5 minutes)</span>
+max_attempts: 5
+bypass_admins: false <span class="cm">// Require 2FA for all users including admins</span>
+    </div>
+    <p>Features include detailed logging of all 2FA events, resend code functionality, and brute force protection with attempt limiting.</p>
+  </section>
+
+  <section id="security-limit" class="doc-section">
+    <h3>Limit Login Attempts</h3>
+    <p>Protect against brute force attacks by limiting login attempts per IP address. Configure number of allowed attempts and lockout duration. IP and email blacklists provide additional protection.</p>
+    <span class="badge-pill">Attempt Limiting</span>
+    <span class="badge-pill">IP Blacklist</span>
+    <span class="badge-pill">Email Blacklist</span>
+    <span class="badge-pill alt">CIDR Notation</span>
+    <span class="badge-pill alt">Custom Lockout Message</span>
+    <span class="badge-pill alt">Disable XML-RPC</span>
+  </section>
+
+  <section id="security-hide" class="doc-section">
+    <h3>Hide Login Page</h3>
+    <p>Hide the default wp-login.php and wp-admin URLs from unauthorized users. Redirect guests to a custom login URL or show a 404 page. Prevents automated bots from finding your login page.</p>
+    <div class="code-block">
+<span class="cm">// Custom login URL example</span>
+https://example.com/secret-login
+
+<span class="cm">// Default URLs are hidden/redirected</span>
+https://example.com/wp-login.php → 404
+https://example.com/wp-admin → 404
+    </div>
+  </section>
+
+  <section id="security-captcha" class="doc-section">
+    <h3>Math Captcha</h3>
+    <p>Add simple math-based captcha challenges to login, registration, and password reset forms. Prevent automated submissions while maintaining accessibility.</p>
+  </section>
+
+  <!-- Redirects -->
+  <section id="redirects" class="doc-section">
+    <div class="section-tag">User Management</div>
+    <h2>Login Redirects</h2>
+    <p>Control where users are redirected after successful login based on their role. Configure separate redirects for administrators, editors, authors, contributors, and subscribers. Default redirects can be set globally.</p>
+    <div class="code-block">
+<span class="cm">// Role-based redirect example</span>
+Administrator: https://example.com/wp-admin
+Editor: https://example.com/wp-admin/post-new.php
+Subscriber: https://example.com/my-account
+    </div>
+  </section>
+
+  <!-- Auto Login -->
+  <section id="auto-login" class="doc-section">
+    <h2>Auto Login</h2>
+    <p>Enable automatic login functionality for specific scenarios such as email verification links or one-time access tokens. Useful for password reset flows and temporary user access.</p>
+  </section>
+
+  <!-- Architecture -->
+  <section id="architecture" class="doc-section">
+    <div class="section-tag">Developer</div>
+    <h2>Architecture</h2>
+    <p>AuthGuard follows PSR-4 autoloading standards with a modular, service-oriented architecture. The plugin is organized into distinct namespaces for maintainability and extensibility.</p>
+    <div class="code-block">
+includes/
+├── Admin/          <span class="cm">// Admin interface classes</span>
+├── API/            <span class="cm">// REST API endpoints</span>
+├── CLI/            <span class="cm">// WP-CLI commands</span>
+├── Core/           <span class="cm">// Core functionality</span>
+├── Helpers/        <span class="cm">// Utility functions</span>
+├── Hook/           <span class="cm">// Action and filter hooks</span>
+├── Public/         <span class="cm">// Frontend functionality</span>
+├── Services/       <span class="cm">// Feature services</span>
+├── Plugin.php      <span class="cm">// Main plugin class</span>
+└── UserMeta.php    <span class="cm">// User meta handling</span>
+    </div>
+  </section>
+
+  <!-- API Reference -->
+  <section id="api-rest" class="doc-section">
+    <div class="section-tag">API Reference</div>
+    <h2>REST Endpoints</h2>
+    <p>AuthGuard exposes REST API endpoints for settings management and plugin functionality. All endpoints are prefixed with <code>/authguard/v1</code>.</p>
+    <div class="code-block">
+GET    /authguard/v1/settings       <span class="cm">→ Get plugin settings</span>
+POST   /authguard/v1/settings       <span class="cm">→ Update plugin settings</span>
+GET    /authguard/v1/logs/2fa       <span class="cm">→ Get 2FA logs</span>
+POST   /authguard/v1/import         <span class="cm">→ Import settings</span>
+GET    /authguard/v1/export         <span class="cm">→ Export settings</span>
+    </div>
+  </section>
+
+  <section id="api-ajax" class="doc-section">
+    <h3>AJAX Actions</h3>
+    <p>Admin and public AJAX actions for dynamic functionality without page reloads.</p>
+    <div class="code-block">
+<span class="cm">// Admin AJAX (requires authentication)</span>
+wp_ajax_authguard_ajax_callback
+
+<span class="cm">// Public AJAX (no authentication)</span>
+wp_ajax_nopriv_authguard_ajax_callback
+
+<span class="cm">// 2FA verification</span>
+admin_post_verify_email_2fa
+admin_post_resend_email_2fa
+    </div>
+  </section>
+
+  <section id="api-hooks" class="doc-section">
+    <h3>Hooks & Filters</h3>
+    <p>Extensive hook system for customizing plugin behavior without modifying core files.</p>
+    <span class="badge-pill">login_body_class</span>
+    <span class="badge-pill">login_headerurl</span>
+    <span class="badge-pill">login_form_defaults</span>
+    <span class="badge-pill alt">authenticate</span>
+    <span class="badge-pill alt">registration_errors</span>
+    <span class="badge-pill alt">wp_new_user_notification_email</span>
+  </section>
+
+  <!-- Changelog -->
+  <section id="changelog" class="doc-section">
+    <div class="section-tag">History</div>
+    <h2>Changelog</h2>
+    <p><strong style="color:var(--text)">v1.0.0</strong> — Initial release with login customizer, 2FA authentication, login limiting, hide login, math captcha, auto login, import/export, and comprehensive settings.</p>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const spy = new bootstrap.ScrollSpy(document.querySelector('.main-content'), {
+      target: '#sidebar-nav',
+      offset: 80,
+      smoothScroll: true
+    });
+
+    const mainEl = document.querySelector('.main-content');
+    mainEl.addEventListener('activate.bs.scrollspy', (e) => {
+      const activeLink = document.querySelector('#sidebar-nav .nav-link.active');
+      if (!activeLink) return;
+
+      let parent = activeLink.closest('.collapse');
+      while (parent) {
+        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(parent, { toggle: false });
+        bsCollapse.show();
+        const toggle = document.querySelector(`[data-bs-target="#${parent.id}"]`);
+        if (toggle) toggle.setAttribute('aria-expanded', 'true');
+        parent = parent.parentElement?.closest('.collapse');
+      }
+    });
+  });
+</script>
+</body>
+</html>

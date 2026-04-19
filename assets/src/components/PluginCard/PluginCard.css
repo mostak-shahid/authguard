@@ -1,0 +1,6 @@
+.authguard-plugin-card {
+  border: 1px solid var(--semi-color-border);
+}
+.authguard-plugin-card .semi-icon-star svg {
+  max-width: unset;
+}/*# sourceMappingURL=PluginCard.css.map */

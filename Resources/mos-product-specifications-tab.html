@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scrollspy + Vertical Multilevel Menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --sidebar-w: 280px;
+      --accent: #f0522a;
+      --accent2: #ffc947;
+      --dark: #0f0e0d;
+      --surface: #1a1917;
+      --surface2: #252320;
+      --border: #2e2c29;
+      --text: #e8e4df;
+      --muted: #7a7368;
+      --nav-link: #b0a99f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      background: rgba(15,14,13,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      z-index: 1100;
+      gap: 12px;
+    }
+    .topbar-brand {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .topbar-brand span { color: var(--accent); }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      overflow-x: hidden;
+      z-index: 1000;
+      padding: 16px 0 40px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    /* ── NAV SECTIONS ── */
+    .nav-section-label {
+      font-family: 'Syne', sans-serif;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 20px 20px 6px;
+    }
+
+    /* ── NAV ITEMS ── */
+    #sidebar-nav .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 20px;
+      font-size: .875rem;
+      color: var(--nav-link);
+      border-radius: 0;
+      border-left: 2px solid transparent;
+      transition: color .15s, background .15s, border-color .15s;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    #sidebar-nav .nav-link:hover {
+      color: var(--text);
+      background: rgba(255,255,255,.04);
+    }
+    #sidebar-nav .nav-link.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      background: rgba(240,82,42,.07);
+      font-weight: 500;
+    }
+    #sidebar-nav .nav-link i {
+      font-size: .95rem;
+      flex-shrink: 0;
+      width: 18px;
+      text-align: center;
+    }
+
+    /* ── COLLAPSIBLE PARENT ── */
+    .nav-toggle {
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      justify-content: space-between;
+    }
+    .nav-toggle .chevron {
+      font-size: .7rem;
+      color: var(--muted);
+      transition: transform .25s;
+      margin-left: auto;
+    }
+    .nav-toggle[aria-expanded="true"] .chevron { transform: rotate(90deg); }
+    .nav-toggle[aria-expanded="true"] { color: var(--text); }
+
+    /* ── SUBMENU L2 ── */
+    .nav-sub {
+      padding-left: 38px;
+    }
+    .nav-sub .nav-link {
+      font-size: .825rem;
+      padding: 5px 20px 5px 0;
+      border-left: none;
+      position: relative;
+    }
+    .nav-sub .nav-link::before {
+      content: '';
+      position: absolute;
+      left: -18px;
+      top: 50%;
+      width: 12px;
+      height: 1px;
+      background: var(--border);
+    }
+    .nav-sub .nav-link.active {
+      color: var(--accent2);
+      background: none;
+    }
+    .nav-sub .nav-link.active::before { background: var(--accent2); }
+
+    /* ── SUBMENU L3 ── */
+    .nav-sub-sub {
+      padding-left: 20px;
+    }
+    .nav-sub-sub .nav-link {
+      font-size: .775rem;
+      padding: 4px 16px 4px 0;
+      color: #6e6760;
+    }
+    .nav-sub-sub .nav-link:hover { color: var(--muted); }
+    .nav-sub-sub .nav-link.active { color: var(--accent); }
+    .nav-sub-sub .nav-link::before { left: -14px; width: 8px; }
+
+    /* ── MAIN CONTENT ── */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      margin-top: 56px;
+      padding: 60px 64px;
+      max-width: calc(100% - var(--sidebar-w));
+    }
+
+    /* ── SECTIONS ── */
+    .doc-section {
+      padding-top: 24px;
+      margin-bottom: 80px;
+    }
+    .doc-section h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: -.03em;
+      margin-bottom: 8px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .doc-section h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin: 40px 0 12px;
+      color: var(--text);
+    }
+    .doc-section h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 28px 0 8px;
+      color: var(--muted);
+    }
+    .doc-section p {
+      color: #a09890;
+      line-height: 1.8;
+      max-width: 680px;
+    }
+
+    /* Accent tag */
+    .section-tag {
+      display: inline-block;
+      font-family: 'Syne', sans-serif;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 3px;
+      padding: 2px 8px;
+      margin-bottom: 12px;
+    }
+
+    /* Code block */
+    .code-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      font-size: .8rem;
+      font-family: 'DM Mono', 'Courier New', monospace;
+      color: #c8bfb5;
+      overflow-x: auto;
+      margin: 16px 0;
+      line-height: 1.7;
+    }
+    .code-block .kw { color: #f0522a; }
+    .code-block .str { color: #ffc947; }
+    .code-block .cm { color: #5a5450; font-style: italic; }
+
+    /* Card */
+    .feature-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: border-color .2s;
+    }
+    .feature-card:hover { border-color: var(--accent); }
+    .feature-card h5 {
+      font-family: 'Syne', sans-serif;
+      font-size: .95rem;
+      margin-bottom: 6px;
+    }
+    .feature-card p { font-size: .85rem; margin: 0; }
+
+    /* Pills */
+    .badge-pill {
+      display: inline-block;
+      background: rgba(240,82,42,.15);
+      color: var(--accent);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: .75rem;
+      font-weight: 500;
+      margin: 4px 4px 4px 0;
+    }
+    .badge-pill.alt {
+      background: rgba(255,201,71,.1);
+      color: var(--accent2);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* Collapse animation */
+    .collapse { transition: none; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .main-content { margin-left: 0; max-width: 100%; padding: 40px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <a class="topbar-brand" href="#">Dev<span>Docs</span></a>
+</div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <nav id="sidebar-nav">
+
+    <!-- SECTION 1: Getting Started -->
+    <div class="nav-section-label">Getting Started</div>
+
+    <a class="nav-link" href="#introduction">
+      <i class="bi bi-house-door"></i> Introduction
+    </a>
+
+    <!-- Collapsible: Installation -->
+    <button class="nav-link nav-toggle" type="button"
+            data-bs-toggle="collapse" data-bs-target="#collapseInstall"
+            aria-expanded="false" aria-controls="collapseInstall">
+      <i class="bi bi-download"></i> Installation
+      <i class="bi bi-chevron-right chevron"></i>
+    </button>
+    <div class="collapse" id="collapseInstall">
+      <nav class="nav-sub flex-column nav">
+        <a class="nav-link" href="#install-requirements">Requirements</a>
+        <a class="nav-link" href="#install-npm">NPM</a>
+        <a class="nav-link" href="#install-cdn">CDN</a>
+        <!-- L3 nested under CDN -->
+        <button class="nav-link nav-toggle ps-0" type="button"
+                data-bs-toggle="collapse" data-bs-target="#collapseCdn"
+                aria-expanded="false" aria-controls="collapseCdn"
+                style="padding-left:0!important;font-size:.775rem">
+          Advanced CDN Options
+          <i class="bi bi-chevron-right chevron"></i>
+        </button>
+        <div class="collapse" id="collapseCdn">
+          <nav class="nav-sub-sub flex-column nav">
+            <a class="nav-link" href="#cdn-integrity">SRI / Integrity</a>
+            <a class="nav-link" href="#cdn-custom">Custom Builds</a>
+          </nav>
+        </div>
+      </nav>
+    </div>
+
+    <!-- SECTION 2: Core Concepts -->
+    <div class="nav-section-label">Core Concepts</div>
+
+    <a class="nav-link" href="#architecture">
+      <i class="bi bi-diagram-3"></i> Architecture
+    </a>
+
+    <!-- Collapsible: Components -->
+    <button class="nav-link nav-toggle" type="button"
+            data-bs-toggle="collapse" data-bs-target="#collapseComponents"
+            aria-expanded="false" aria-controls="collapseComponents">
+      <i class="bi bi-grid-1x2"></i> Components
+      <i class="bi bi-chevron-right chevron"></i>
+    </button>
+    <div class="collapse" id="collapseComponents">
+      <nav class="nav-sub flex-column nav">
+        <a class="nav-link" href="#comp-layout">Layout</a>
+        <a class="nav-link" href="#comp-forms">Forms</a>
+
+        <!-- L3 under Forms -->
+        <button class="nav-link nav-toggle ps-0" type="button"
+                data-bs-toggle="collapse" data-bs-target="#collapseFormSub"
+                aria-expanded="false" aria-controls="collapseFormSub"
+                style="padding-left:0!important;font-size:.775rem">
+          Form Controls
+          <i class="bi bi-chevron-right chevron"></i>
+        </button>
+        <div class="collapse" id="collapseFormSub">
+          <nav class="nav-sub-sub flex-column nav">
+            <a class="nav-link" href="#form-inputs">Inputs</a>
+            <a class="nav-link" href="#form-select">Select</a>
+            <a class="nav-link" href="#form-validation">Validation</a>
+          </nav>
+        </div>
+
+        <a class="nav-link" href="#comp-modals">Modals</a>
+        <a class="nav-link" href="#comp-tables">Tables</a>
+      </nav>
+    </div>
+
+    <!-- SECTION 3: Advanced -->
+    <div class="nav-section-label">Advanced</div>
+
+    <!-- Collapsible: API Reference -->
+    <button class="nav-link nav-toggle" type="button"
+            data-bs-toggle="collapse" data-bs-target="#collapseAPI"
+            aria-expanded="true" aria-controls="collapseAPI">
+      <i class="bi bi-code-slash"></i> API Reference
+      <i class="bi bi-chevron-right chevron"></i>
+    </button>
+    <div class="collapse show" id="collapseAPI">
+      <nav class="nav-sub flex-column nav">
+        <a class="nav-link" href="#api-rest">REST Endpoints</a>
+        <a class="nav-link" href="#api-auth">Authentication</a>
+        <a class="nav-link" href="#api-errors">Error Codes</a>
+      </nav>
+    </div>
+
+    <a class="nav-link" href="#changelog">
+      <i class="bi bi-clock-history"></i> Changelog
+    </a>
+
+  </nav>
+</nav>
+
+<!-- MAIN CONTENT (Scrollspy target) -->
+<main class="main-content"
+      data-bs-spy="scroll"
+      data-bs-target="#sidebar-nav"
+      data-bs-smooth-scroll="true"
+      data-bs-offset="80"
+      tabindex="0">
+
+  <!-- Introduction -->
+  <section id="introduction" class="doc-section">
+    <div class="section-tag">Overview</div>
+    <h2>Introduction</h2>
+    <p>Welcome to DevDocs — a minimal, dark-mode documentation template built on Bootstrap 5.3. It features Scrollspy tied to a vertical, multilevel collapsible sidebar, so readers always know exactly where they are.</p>
+    <p>Scroll down or click any sidebar link to navigate. Active states update automatically using Bootstrap's Scrollspy plugin as you scroll through the content.</p>
+    <div class="row g-3 mt-2">
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5><i class="bi bi-layout-sidebar me-2" style="color:var(--accent)"></i>Sidebar Nav</h5>
+          <p>Collapsible multi-level menu with L1, L2, and L3 nesting.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5><i class="bi bi-eye me-2" style="color:var(--accent2)"></i>Scrollspy</h5>
+          <p>Active link updates automatically as you scroll through sections.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <h5><i class="bi bi-palette me-2" style="color:var(--accent)"></i>Dark Theme</h5>
+          <p>Cohesive dark palette with sharp accent colors and refined typography.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation -->
+  <section id="install-requirements" class="doc-section">
+    <div class="section-tag">Installation</div>
+    <h2>Requirements</h2>
+    <p>Before installing, ensure your environment meets the following requirements:</p>
+    <span class="badge-pill">Node.js ≥ 18</span>
+    <span class="badge-pill">npm ≥ 9</span>
+    <span class="badge-pill alt">Bootstrap 5.3</span>
+    <span class="badge-pill alt">Modern Browser</span>
+    <p class="mt-3">The template has no build step required when using CDN. For a custom build with tree-shaking, a bundler like Vite or Webpack is recommended.</p>
+  </section>
+
+  <section id="install-npm" class="doc-section">
+    <h3>NPM</h3>
+    <p>Install Bootstrap via npm to use it in your build pipeline or import only what you need.</p>
+    <div class="code-block">
+<span class="cm"># Install Bootstrap and Icons</span>
+npm install bootstrap@5.3 bootstrap-icons
+
+<span class="cm"># Import in your entry file</span>
+<span class="kw">import</span> <span class="str">'bootstrap/dist/css/bootstrap.min.css'</span>;
+<span class="kw">import</span> <span class="str">'bootstrap'</span>;
+    </div>
+  </section>
+
+  <section id="install-cdn" class="doc-section">
+    <h3>CDN</h3>
+    <p>The quickest way to get started is via the jsDelivr CDN. Drop these tags into your <code>&lt;head&gt;</code> and before <code>&lt;/body&gt;</code>.</p>
+    <div class="code-block">
+<span class="cm">&lt;!-- CSS --&gt;</span>
+&lt;<span class="kw">link</span> href=<span class="str">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"</span> rel=<span class="str">"stylesheet"</span>&gt;
+
+<span class="cm">&lt;!-- JS (before &lt;/body&gt;) --&gt;</span>
+&lt;<span class="kw">script</span> src=<span class="str">"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"</span>&gt;&lt;/<span class="kw">script</span>&gt;
+    </div>
+  </section>
+
+  <section id="cdn-integrity" class="doc-section">
+    <h4>SRI / Integrity</h4>
+    <p>For production, add Subresource Integrity (SRI) hashes to prevent CDN tampering. Bootstrap's official download page provides pre-computed hashes for every release.</p>
+  </section>
+
+  <section id="cdn-custom" class="doc-section">
+    <h4>Custom Builds</h4>
+    <p>Import only the Bootstrap modules you need. This can dramatically reduce bundle size in larger applications.</p>
+  </section>
+
+  <!-- Architecture -->
+  <section id="architecture" class="doc-section">
+    <div class="section-tag">Core Concepts</div>
+    <h2>Architecture</h2>
+    <p>The application is structured around a simple three-layer model: presentation, logic, and data. Each layer is independently testable and replaceable.</p>
+    <p>Routing is handled client-side with the History API, keeping the server stateless and the UI fast. State management follows a unidirectional data flow pattern.</p>
+  </section>
+
+  <!-- Components -->
+  <section id="comp-layout" class="doc-section">
+    <h3>Layout</h3>
+    <p>The layout system is based on Bootstrap's 12-column flexbox grid, extended with CSS custom properties for spacing tokens. Responsive breakpoints remain unchanged from Bootstrap defaults.</p>
+  </section>
+
+  <section id="comp-forms" class="doc-section">
+    <h3>Forms</h3>
+    <p>All form components are fully accessible (WCAG 2.1 AA). They support native browser validation and a custom validation layer via JavaScript.</p>
+  </section>
+
+  <section id="form-inputs" class="doc-section">
+    <h4>Inputs</h4>
+    <p>Text, number, email, password and textarea inputs share a unified style. Focus rings are customizable via CSS variables.</p>
+  </section>
+
+  <section id="form-select" class="doc-section">
+    <h4>Select</h4>
+    <p>Native <code>&lt;select&gt;</code> elements are styled to match the rest of the form suite. Multi-select support is available via the optional Select2 integration.</p>
+  </section>
+
+  <section id="form-validation" class="doc-section">
+    <h4>Validation</h4>
+    <p>Client-side validation uses the Constraint Validation API. Error messages are displayed inline beneath each field and are announced to screen readers via <code>aria-live</code>.</p>
+  </section>
+
+  <section id="comp-modals" class="doc-section">
+    <h3>Modals</h3>
+    <p>Modals are built on Bootstrap's Modal component with extra focus management and scroll-lock improvements. They support nested modals via a z-index stacking utility.</p>
+  </section>
+
+  <section id="comp-tables" class="doc-section">
+    <h3>Tables</h3>
+    <p>Data tables include sortable column headers, row selection, pagination, and an optional inline-edit mode. Large datasets use virtual scrolling for performance.</p>
+  </section>
+
+  <!-- API Reference -->
+  <section id="api-rest" class="doc-section">
+    <div class="section-tag">Advanced</div>
+    <h2>REST Endpoints</h2>
+    <p>All API endpoints follow REST conventions and return JSON. Base URL: <code>https://api.example.com/v1</code></p>
+    <div class="code-block">
+GET    /users          <span class="cm">→ List all users</span>
+POST   /users          <span class="cm">→ Create user</span>
+GET    /users/<span class="str">:id</span>      <span class="cm">→ Get user by ID</span>
+PATCH  /users/<span class="str">:id</span>      <span class="cm">→ Update user</span>
+DELETE /users/<span class="str">:id</span>      <span class="cm">→ Delete user</span>
+    </div>
+  </section>
+
+  <section id="api-auth" class="doc-section">
+    <h3>Authentication</h3>
+    <p>All endpoints require a Bearer token in the Authorization header. Tokens are issued via the <code>POST /auth/token</code> endpoint and expire after 24 hours.</p>
+    <div class="code-block">
+Authorization: Bearer <span class="str">eyJhbGciOiJIUzI1NiIsInR5...</span>
+    </div>
+  </section>
+
+  <section id="api-errors" class="doc-section">
+    <h3>Error Codes</h3>
+    <p>The API uses standard HTTP status codes. Errors include a machine-readable <code>code</code> and a human-readable <code>message</code>.</p>
+    <span class="badge-pill">400 Bad Request</span>
+    <span class="badge-pill">401 Unauthorized</span>
+    <span class="badge-pill alt">404 Not Found</span>
+    <span class="badge-pill alt">500 Server Error</span>
+  </section>
+
+  <!-- Changelog -->
+  <section id="changelog" class="doc-section">
+    <div class="section-tag">History</div>
+    <h2>Changelog</h2>
+    <p><strong style="color:var(--text)">v2.1.0</strong> — Added multilevel sidebar, Scrollspy integration, dark theme tokens.</p>
+    <p><strong style="color:var(--text)">v2.0.0</strong> — Migrated to Bootstrap 5.3. Dropped jQuery dependency.</p>
+    <p><strong style="color:var(--text)">v1.4.2</strong> — Accessibility fixes. SRI hashes updated.</p>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Re-initialize Scrollspy after DOM is ready (ensures it picks up offset)
+  document.addEventListener('DOMContentLoaded', () => {
+    const spy = new bootstrap.ScrollSpy(document.querySelector('.main-content'), {
+      target: '#sidebar-nav',
+      offset: 80,
+      smoothScroll: true
+    });
+
+    // Auto-expand parent collapse when a child link becomes active
+    const mainEl = document.querySelector('.main-content');
+    mainEl.addEventListener('activate.bs.scrollspy', (e) => {
+      const activeLink = document.querySelector('#sidebar-nav .nav-link.active');
+      if (!activeLink) return;
+
+      // Walk up to find any parent .collapse that should be open
+      let parent = activeLink.closest('.collapse');
+      while (parent) {
+        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(parent, { toggle: false });
+        bsCollapse.show();
+        const toggle = document.querySelector(`[data-bs-target="#${parent.id}"]`);
+        if (toggle) toggle.setAttribute('aria-expanded', 'true');
+        parent = parent.parentElement?.closest('.collapse');
+      }
+    });
+  });
+</script>
+</body>
+</html>
