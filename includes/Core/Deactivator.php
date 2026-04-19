@@ -1,6 +1,6 @@
 <?php
 
-namespace MosPress\Authpress\Core;
+namespace MosPress\Authguard\Core;
 
 /**
  * Fired during plugin deactivation
@@ -8,8 +8,8 @@ namespace MosPress\Authpress\Core;
  * @link       https://mostak-shahid.github.io/
  * @since      1.0.0
  *
- * @package    Authpress
- * @subpackage Authpress/includes
+ * @package    Authguard
+ * @subpackage Authguard/includes
  */
 
 /**
@@ -18,8 +18,8 @@ namespace MosPress\Authpress\Core;
  * This class defines all code necessary to run during the plugin's deactivation.
  *
  * @since      1.0.0
- * @package    Authpress
- * @subpackage Authpress/includes
+ * @package    Authguard
+ * @subpackage Authguard/includes
  * @author     Programmelab <mostak.shahid@gmail.com>
  */
 class Deactivator

@@ -10,7 +10,7 @@
  *
  * @link              https://mostak-shahid.github.io/
  * @since             1.0.0
- * @package           Secure_Authpress
+ * @package           Authguard
  *
  * @wordpress-plugin
  * Plugin Name:       AuthGuard
@@ -46,7 +46,7 @@ require_once AUTHGUARD_PATH . '/authguard-functions.php';
  */
 function authguard_activate()
 {
-	\MosPress\Authpress\Core\Activator::activate();
+	\MosPress\Authguard\Core\Activator::activate();
 }
 
 /**
@@ -55,7 +55,7 @@ function authguard_activate()
  */
 function authguard_deactivate()
 {
-	\MosPress\Authpress\Core\Deactivator::deactivate();
+	\MosPress\Authguard\Core\Deactivator::deactivate();
 }
 
 register_activation_hook(__FILE__, 'authguard_activate');
@@ -69,11 +69,11 @@ if ( defined( 'WP_CLI' ) && WP_CLI && file_exists( plugin_dir_path( __FILE__ ) .
     $cli_file = plugin_dir_path( __FILE__ ) . 'includes/CLI/CLI_Command.php';
 
     if ( file_exists( $cli_file ) ) {
-        WP_CLI::add_command( 'authguard', 'MosPress\Authpress\CLI\CLI_Command' );
+        WP_CLI::add_command( 'authguard', 'MosPress\Authguard\CLI\CLI_Command' );
     }
 }
 
-use MosPress\Authpress\Plugin;
+use MosPress\Authguard\Plugin;
 
 // Plugin::get_instance();
 new Plugin();

@@ -1,6 +1,6 @@
 <?php
 
-namespace MosPress\Authpress\Admin;
+namespace MosPress\Authguard\Admin;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -8,8 +8,8 @@ namespace MosPress\Authpress\Admin;
  * @link       https://mostak-shahid.github.io/
  * @since      1.0.0
  *
- * @package    Authpress
- * @subpackage Authpress/admin
+ * @package    Authguard
+ * @subpackage Authguard/admin
  */
 
 /**
@@ -18,8 +18,8 @@ namespace MosPress\Authpress\Admin;
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the admin-specific stylesheet and JavaScript.
  *
- * @package    Authpress
- * @subpackage Authpress/admin
+ * @package    Authguard
+ * @subpackage Authguard/admin
  * @author     Md. Mostak Shahid <mostak.shahid@gmail.com>
  */
 class AdminClass

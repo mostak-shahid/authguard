@@ -1,11 +1,11 @@
 <?php
 
-namespace MosPress\Authpress\Core;
+namespace MosPress\Authguard\Core;
 if ( ! defined( 'ABSPATH' ) ) exit;
-use MosPress\Authpress\API\Ajax_API;
-use MosPress\Authpress\Hook\Filter_Hook;
-use MosPress\Authpress\Hook\Action_Hook;
-use MosPress\Authpress\Core\Deactivator;
+use MosPress\Authguard\API\Ajax_API;
+use MosPress\Authguard\Hook\Filter_Hook;
+use MosPress\Authguard\Hook\Action_Hook;
+use MosPress\Authguard\Core\Deactivator;
 class Tools
 {
     protected $options;

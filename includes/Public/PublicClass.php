@@ -1,6 +1,6 @@
 <?php
 
-namespace MosPress\Authpress\Public;
+namespace MosPress\Authguard\Public;
 
 /**
  * The public-facing functionality of the plugin.
@@ -8,8 +8,8 @@ namespace MosPress\Authpress\Public;
  * @link       https://mostak-shahid.github.io/
  * @since      1.0.0
  *
- * @package    Authpress
- * @subpackage Authpress/public
+ * @package    Authguard
+ * @subpackage Authguard/public
  */
 
 /**
@@ -18,8 +18,8 @@ namespace MosPress\Authpress\Public;
  * Defines the plugin name, version, and two examples hooks for how to
  * enqueue the public-facing stylesheet and JavaScript.
  *
- * @package    Authpress
- * @subpackage Authpress/public
+ * @package    Authguard
+ * @subpackage Authguard/public
  * @author     Md. Mostak Shahid <mostak.shahid@gmail.com>
  */
 class PublicClass

@@ -2,11 +2,11 @@
 /**
  * WP-CLI Commands
  *
- * @package Authpress
+ * @package Authguard
  * @subpackage CLI
  */
 
-namespace MosPress\Authpress\CLI;
+namespace MosPress\Authguard\CLI;
 use WP_CLI;
 
 /**

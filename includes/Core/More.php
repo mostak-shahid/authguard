@@ -1,6 +1,6 @@
 <?php
 
-namespace MosPress\Authpress\Core;
+namespace MosPress\Authguard\Core;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class More

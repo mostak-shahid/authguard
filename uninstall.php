@@ -5,7 +5,7 @@
  * Fired when the plugin is uninstalled (deleted from WordPress admin).
  * This file is called automatically by WordPress.
  *
- * @package Authpress
+ * @package Authguard
  */
 
 // If uninstall not called from WordPress, exit

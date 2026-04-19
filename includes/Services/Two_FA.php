@@ -1,5 +1,5 @@
 <?php
-namespace MosPress\Authpress\Services;
+namespace MosPress\Authguard\Services;
 if ( ! defined( 'ABSPATH' ) ) exit;
 class Two_FA
 {

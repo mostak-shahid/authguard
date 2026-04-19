@@ -1,7 +1,7 @@
 /**
  * Illustrations.js
  * Location: wp-content/plugins/authguard/src/lib/Illustrations.js
- * Description: Centralized SVG illustration components for Authpress plugin.
+ * Description: Centralized SVG illustration components for Authguard plugin.
  */
 /**
  * Icons

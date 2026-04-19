@@ -1,7 +1,7 @@
 <?php
-namespace MosPress\Authpress\API;
+namespace MosPress\Authguard\API;
 
-use MosPress\Authpress\Helpers\Utils;
+use MosPress\Authguard\Helpers\Utils;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;

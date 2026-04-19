@@ -1,5 +1,5 @@
 <?php
-namespace MosPress\Authpress\Core;
+namespace MosPress\Authguard\Core;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @link       https://mostak-shahid.github.io/
  * @since      1.0.0
  *
- * @package    Authpress
- * @subpackage Authpress/includes
+ * @package    Authguard
+ * @subpackage Authguard/includes
  */
 
 /**
@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Authpress
- * @subpackage Authpress/includes
+ * @package    Authguard
+ * @subpackage Authguard/includes
  * @author     Programmelab <mostak.shahid@gmail.com>
  */
 class Loader

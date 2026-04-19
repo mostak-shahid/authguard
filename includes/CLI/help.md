@@ -863,7 +863,7 @@ wp plugin deactivate authguard
 wp plugin activate authguard
 
 # Or manually run the activation function
-wp eval 'MosPress\Authpress\Core\Activator::activate();'
+wp eval 'MosPress\Authguard\Core\Activator::activate();'
 ```
 
 **Empty 2FA logs after seeding:**

@@ -1,25 +1,25 @@
 <?php
 
-namespace MosPress\Authpress;
+namespace MosPress\Authguard;
 
 defined('ABSPATH') || exit;
 
 
-use MosPress\Authpress\API\Ajax_API;
-use MosPress\Authpress\API\Rest_API;
-use MosPress\Authpress\Hook\Action_Hook;
-use MosPress\Authpress\Hook\Filter_Hook;
-use MosPress\Authpress\Core\ImportExport;
-use MosPress\Authpress\Core\More;
-use MosPress\Authpress\Core\Tools;
-use MosPress\Authpress\Services\Customizer;
-use MosPress\Authpress\Services\Math_Captcha;
-use MosPress\Authpress\Services\Two_FA;
-use MosPress\Authpress\Services\Limit_Login;
-use MosPress\Authpress\Services\Hide_Login;
-use MosPress\Authpress\Services\Auto_Login;
+use MosPress\Authguard\API\Ajax_API;
+use MosPress\Authguard\API\Rest_API;
+use MosPress\Authguard\Hook\Action_Hook;
+use MosPress\Authguard\Hook\Filter_Hook;
+use MosPress\Authguard\Core\ImportExport;
+use MosPress\Authguard\Core\More;
+use MosPress\Authguard\Core\Tools;
+use MosPress\Authguard\Services\Customizer;
+use MosPress\Authguard\Services\Math_Captcha;
+use MosPress\Authguard\Services\Two_FA;
+use MosPress\Authguard\Services\Limit_Login;
+use MosPress\Authguard\Services\Hide_Login;
+use MosPress\Authguard\Services\Auto_Login;
 
-use MosPress\Authpress\UserMeta;
+use MosPress\Authguard\UserMeta;
 
 class Plugin {
 
@@ -89,7 +89,7 @@ class Plugin {
 	 */
 	private function define_admin_hooks()
 	{
-		$plugin_admin = new \MosPress\Authpress\Admin\AdminClass($this->plugin_name, $this->version);
+		$plugin_admin = new \MosPress\Authguard\Admin\AdminClass($this->plugin_name, $this->version);
 		add_action('admin_enqueue_scripts', [$plugin_admin, 'enqueue_styles'], 9999);
 		add_action('admin_enqueue_scripts', [$plugin_admin, 'enqueue_scripts'], 9999);
 	}
@@ -104,7 +104,7 @@ class Plugin {
 	private function define_public_hooks()
 	{
 
-		$plugin_public = new \MosPress\Authpress\Public\PublicClass($this->plugin_name, $this->version);
+		$plugin_public = new \MosPress\Authguard\Public\PublicClass($this->plugin_name, $this->version);
 		add_action('wp_enqueue_scripts', [$plugin_public, 'enqueue_styles']);
 		add_action('wp_enqueue_scripts', [$plugin_public, 'enqueue_scripts']);
 		// Save settings by ajax

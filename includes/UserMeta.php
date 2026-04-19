@@ -1,6 +1,6 @@
 <?php
 
-namespace MosPress\Authpress;
+namespace MosPress\Authguard;
 
 defined('ABSPATH') || exit;
 

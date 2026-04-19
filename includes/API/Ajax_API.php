@@ -1,7 +1,7 @@
 <?php
-namespace MosPress\Authpress\API;
+namespace MosPress\Authguard\API;
 if ( ! defined( 'ABSPATH' ) ) exit;
-use MosPress\Authpress\Helpers\CryptoHelper;
+use MosPress\Authguard\Helpers\CryptoHelper;
 
 class Ajax_API
 {

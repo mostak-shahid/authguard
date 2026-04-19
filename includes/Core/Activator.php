@@ -1,15 +1,15 @@
 <?php
 
-namespace MosPress\Authpress\Core;
-use MosPress\Authpress\Helpers\CryptoHelper;
+namespace MosPress\Authguard\Core;
+use MosPress\Authguard\Helpers\CryptoHelper;
 /**
  * Fired during plugin activation
  *
  * @link       https://mostak-shahid.github.io/
  * @since      1.0.0
  *
- * @package    Authpress
- * @subpackage Authpress/includes
+ * @package    Authguard
+ * @subpackage Authguard/includes
  */
 
 /**
@@ -18,8 +18,8 @@ use MosPress\Authpress\Helpers\CryptoHelper;
  * This class defines all code necessary to run during the plugin's activation.
  *
  * @since      1.0.0
- * @package    Authpress
- * @subpackage Authpress/includes
+ * @package    Authguard
+ * @subpackage Authguard/includes
  * @author     Programmelab <mostak.shahid@gmail.com>
  */
 class Activator

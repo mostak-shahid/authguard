@@ -1,5 +1,5 @@
 <?php
-namespace MosPress\Authpress\Hook;
+namespace MosPress\Authguard\Hook;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 

@@ -1,14 +1,14 @@
 <?php
-namespace MosPress\Authpress\API;
+namespace MosPress\Authguard\API;
 if ( ! defined( 'ABSPATH' ) ) exit;
-use MosPress\Authpress\API\LogsController;
+use MosPress\Authguard\API\LogsController;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_Query;
 use WP_REST_Server;
 
-use MosPress\Authpress\Helpers\CryptoHelper;
+use MosPress\Authguard\Helpers\CryptoHelper;
 /**
  * Rest API Router
  *

@@ -1,5 +1,5 @@
 <?php
-namespace MosPress\Authpress\Helpers;
+namespace MosPress\Authguard\Helpers;
 
 class Utils {
 
