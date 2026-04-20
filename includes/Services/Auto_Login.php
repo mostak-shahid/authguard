@@ -15,7 +15,9 @@ class Auto_Login
         ) ? sanitize_text_field(wp_unslash($this->options['auto_login']['settings']['enabled'])) : false;
 
         if ($auto_login_enabled) {
-            add_action('login_footer', [$this, 'render_auto_login_button']);
+		    add_filter( 'login_body_class', [$this, 'authguard_add_login_body_class'] );
+            add_action('login_form', [$this, 'render_auto_login_button'], 999);
+            // add_action('login_footer', [$this, 'render_auto_login_button'], 0);
             add_action('login_init', [$this, 'handle_auto_login_request']);
             add_action('admin_post_nopriv_authguard_send_login_link', [$this, 'handle_send_login_link']);
             add_action('admin_post_authguard_send_login_link', [$this, 'handle_send_login_link']);
@@ -23,6 +25,10 @@ class Auto_Login
         }
     }
 
+	public function authguard_add_login_body_class( $classes ) {
+		$classes[] = 'authguard-auto-login-enabled'; // 👈 change this to your desired class name
+		return $classes;
+	}
     /**
      * Render auto login button and email form after login form
      */
@@ -35,12 +41,12 @@ class Auto_Login
             return;
         }
         ?>
-        <div id="authguard-auto-login-wrapper" style="margin-top: 20px;">
-            <p style="margin: 20px 0 10px 0; text-align: center;">&mdash; <?php echo esc_html__('OR', 'authguard'); ?> &mdash;</p>
+        <div id="authguard-auto-login-wrapper">
+            <p id="authguard-auto-login-or" style="margin: 20px 0 10px 0; text-align: center;">&mdash; <?php echo esc_html__('OR', 'authguard'); ?> &mdash;</p>
 
-            <button type="button" id="authguard-show-auto-login-form" class="button button-secondary" style="width: 100%;">
+            <a href="javascript:void(0)" id="authguard-show-auto-login-form" class="button button-secondary" style="width: 100%; display: block; text-align: center; box-sizing: border-box;">
                 <?php echo esc_html__('Auto Login', 'authguard'); ?>
-            </button>
+            </a>
 
             <div id="authguard-auto-login-form" style="display: none; margin-top: 15px;">
                 <p>
@@ -62,8 +68,27 @@ class Auto_Login
         </div>
 
         <style>
-            body.authguard-auto-login-mode #loginform {
+            body.authguard-auto-login-mode #loginform > *:not(#authguard-auto-login-wrapper) {
                 display: none !important;
+            }
+            body.authguard-auto-login-mode #authguard-auto-login-or,
+            body.authguard-auto-login-mode #authguard-show-auto-login-form {
+                display: none !important;
+            }
+            .login form {
+                position: relative;
+            }
+            body.authguard-auto-login-enabled.login form {
+                padding-bottom: 100px;
+            }
+            body.authguard-auto-login-enabled.login form #authguard-auto-login-wrapper{
+                position: absolute;
+                bottom: 24px;
+                width: calc(100% - 48px);
+            }
+            body.authguard-auto-login-enabled.authguard-auto-login-mode.login form #authguard-auto-login-wrapper{
+                position: relative;
+                width: 100%;                
             }
         </style>
 
@@ -74,16 +99,12 @@ class Auto_Login
             var autoLoginForm = document.getElementById('authguard-auto-login-form');
             var sendButton = document.getElementById('authguard-send-login-link');
             var emailInput = document.getElementById('authguard-email');
-            var loginForm = document.getElementById('loginform');
 
             if (showButton) {
-                showButton.addEventListener('click', function() {
-                    if (loginForm) {
-                        loginForm.style.display = 'none';
-                    }
+                showButton.addEventListener('click', function(e) {
+                    e.preventDefault();
                     document.body.classList.add('authguard-auto-login-mode');
                     autoLoginForm.style.display = 'block';
-                    showButton.style.display = 'none';
                     emailInput.focus();
                 });
             }
@@ -91,11 +112,7 @@ class Auto_Login
             if (cancelButton) {
                 cancelButton.addEventListener('click', function() {
                     autoLoginForm.style.display = 'none';
-                    showButton.style.display = 'block';
                     document.body.classList.remove('authguard-auto-login-mode');
-                    if (loginForm) {
-                        loginForm.style.display = 'block';
-                    }
                     emailInput.value = '';
                 });
             }
@@ -138,11 +155,7 @@ class Auto_Login
                         if (data.success) {
                             alert(data.data.message);
                             autoLoginForm.style.display = 'none';
-                            showButton.style.display = 'block';
                             document.body.classList.remove('authguard-auto-login-mode');
-                            if (loginForm) {
-                                loginForm.style.display = 'block';
-                            }
                             emailInput.value = '';
                         } else {
                             alert(data.data.message || '<?php echo esc_js('An error occurred. Please try again.', 'authguard'); ?>');
