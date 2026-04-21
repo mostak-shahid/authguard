@@ -139,11 +139,7 @@ class Two_FA
 		if ( $this->pending_user_id <= 0 ) {
 			return;
 		}
-		?>
-		<style id="authguard-2fa-login-styles">
-			#loginform { display: none !important; }			
-		</style>
-		<?php
+		wp_add_inline_style('authguard-login', '#loginform { display: none !important; }');
 	}
 
 	public function filter_login_message( $message ) {

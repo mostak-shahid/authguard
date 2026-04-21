@@ -19,29 +19,29 @@ class Customizer
 		}
 		$disable_lost_password = isset($this->options['customizer']['redesign']['other']['disable_lost_password']) ? sanitize_text_field(wp_unslash($this->options['customizer']['redesign']['other']['disable_lost_password'])) : false;
 		if ($disable_lost_password) {
-			add_action( 'login_head', [$this, 'authguard_hide_lost_password'] );
+			add_action( 'login_enqueue_scripts', [$this, 'authguard_hide_lost_password'], 21 );
 		}
 		$disable_register_link = isset($this->options['customizer']['redesign']['other']['disable_register_link']) ? sanitize_text_field(wp_unslash($this->options['customizer']['redesign']['other']['disable_register_link'])) : false;
 		if ($disable_register_link) {
-			add_action( 'login_head', [$this, 'authguard_disable_registration_by_css'] );
+			add_action( 'login_enqueue_scripts', [$this, 'authguard_disable_registration_by_css'], 21 );
 			add_action( 'init', [$this, 'authguard_block_register_page'] );
 			add_filter( 'option_users_can_register', '__return_false' );
 		}
 		$disable_back_to_website = isset($this->options['customizer']['redesign']['other']['disable_back_to_website']) ? sanitize_text_field(wp_unslash($this->options['customizer']['redesign']['other']['disable_back_to_website'])) : false;
 		if ($disable_back_to_website) {			
    			add_filter( 'login_display_language_dropdown', '__return_false' ); // Keep consistent
-			add_action( 'login_head', [$this, 'authguard_disable_back_to_website_by_css'] );
+			add_action( 'login_enqueue_scripts', [$this, 'authguard_disable_back_to_website_by_css'], 21 );
 		}
 		
 		$disable_privacy_policy = isset($this->options['customizer']['redesign']['other']['disable_privacy_policy']) ? sanitize_text_field(wp_unslash($this->options['customizer']['redesign']['other']['disable_privacy_policy'])) : false;
 		if ($disable_privacy_policy){
 			// Disable link completely
 			add_filter( 'privacy_policy_url', '__return_empty_string' );
-			add_action( 'login_head', [$this, 'authguard_remove_privacy_policy_everywhere'] );
+			add_action( 'login_enqueue_scripts', [$this, 'authguard_remove_privacy_policy_everywhere'], 21 );
 		}
 		$disable_lost_password = isset($this->options['customizer']['redesign']['other']['disable_lost_password']) ? sanitize_text_field(wp_unslash($this->options['customizer']['redesign']['other']['disable_lost_password'])) : false;
 		if ($disable_lost_password){
-			add_action( 'login_head', [$this, 'authguard_remove_lost_password_features'] );
+			add_action( 'login_enqueue_scripts', [$this, 'authguard_remove_lost_password_features'], 21 );
 			add_action( 'init', [$this, 'authguard_block_lostpassword_page'] );
 		}
 		//customizer?.other?.login_by
@@ -479,11 +479,10 @@ class Customizer
 		return $css;
 	}
 	public function authguard_hide_lost_password() {
-		echo '<style>.login #nav a.wp-login-lost-password { display: none !important; }</style>';
+		wp_add_inline_style('authguard-login', '.login #nav a.wp-login-lost-password { display: none !important; }');
 	}
 	public function authguard_disable_registration_by_css() {
-		// Hide register link
-		echo '<style>.login #nav a[href*="register"] { display:none !important; }</style>';
+		wp_add_inline_style('authguard-login', '.login #nav a[href*="register"] { display:none !important; }');
 	}
 	public function authguard_block_register_page() {
 		global $pagenow;
@@ -493,13 +492,10 @@ class Customizer
 		}
 	}
 	public function authguard_disable_back_to_website_by_css() {
-		?>
-			<style>#backtoblog { display: none !important; }</style>
-		<?php
+		wp_add_inline_style('authguard-login', '#backtoblog { display: none !important; }');
 	}
 	public function authguard_remove_lost_password_features() {
-		// Hide link visually
-		echo '<style>.login #nav a[href*="lostpassword"] { display: none !important; }</style>';
+		wp_add_inline_style('authguard-login', '.login #nav a[href*="lostpassword"] { display: none !important; }');
 	}
 	// add_action( 'login_head', 'authguard_remove_lost_password_features' );
 
@@ -513,8 +509,7 @@ class Customizer
 	}
 	// add_action( 'init', 'authguard_block_lostpassword_page' );
 	public function authguard_remove_privacy_policy_everywhere() {
-		// Hide via CSS (for older WP versions)
-		echo '<style>.privacy-policy-page-link { display:none !important; }</style>';
+		wp_add_inline_style('authguard-login', '.privacy-policy-page-link { display:none !important; }');
 	}
 	public function authguard_login_by($user, $username, $password) {
 		$method = isset($this->options['customizer']['other']['login_by']) ? sanitize_text_field(wp_unslash($this->options['customizer']['other']['login_by'])) : 'both';

@@ -12,34 +12,34 @@ class Misc
 
         $disable_remember_me = isset($misc['disable_remember_me']) ? sanitize_text_field(wp_unslash($misc['disable_remember_me'])) : false;
         if ($disable_remember_me) {
-            add_action('login_enqueue_scripts', [$this, 'hide_remember_me_css'], 30);
+            add_action('login_enqueue_scripts', [$this, 'hide_remember_me_css'], 21);
             add_filter('login_form_defaults', [$this, 'force_remember_me_checked'], 10, 1);
         }
 
         $disable_register_link = isset($misc['disable_register_link']) ? sanitize_text_field(wp_unslash($misc['disable_register_link'])) : false;
         if ($disable_register_link) {
-            add_action('login_head', [$this, 'hide_register_link_css']);
+            add_action('login_enqueue_scripts', [$this, 'hide_register_link_css'], 21);
             add_action('init', [$this, 'block_register_page']);
             add_filter('option_users_can_register', '__return_false');
         }
 
         $disable_lost_password = isset($misc['disable_lost_password']) ? sanitize_text_field(wp_unslash($misc['disable_lost_password'])) : false;
         if ($disable_lost_password) {
-            add_action('login_head', [$this, 'hide_lost_password_link_css']);
-            add_action('login_head', [$this, 'hide_lost_password_nav_css']);
+            add_action('login_enqueue_scripts', [$this, 'hide_lost_password_link_css'], 21);
+            add_action('login_enqueue_scripts', [$this, 'hide_lost_password_nav_css'], 21);
             add_action('init', [$this, 'block_lostpassword_page']);
         }
 
         $disable_privacy_policy = isset($misc['disable_privacy_policy']) ? sanitize_text_field(wp_unslash($misc['disable_privacy_policy'])) : false;
         if ($disable_privacy_policy) {
             add_filter('privacy_policy_url', '__return_empty_string');
-            add_action('login_head', [$this, 'hide_privacy_policy_css']);
+            add_action('login_enqueue_scripts', [$this, 'hide_privacy_policy_css'], 21);
         }
 
         $disable_back_to_website = isset($misc['disable_back_to_website']) ? sanitize_text_field(wp_unslash($misc['disable_back_to_website'])) : false;
         if ($disable_back_to_website) {
             add_filter('login_display_language_dropdown', '__return_false');
-            add_action('login_head', [$this, 'hide_back_to_website_css']);
+            add_action('login_enqueue_scripts', [$this, 'hide_back_to_website_css'], 21);
         }
 
         $login_by = isset($misc['login_by']) ? sanitize_text_field(wp_unslash($misc['login_by'])) : 'both';
@@ -63,7 +63,7 @@ class Misc
     }
 
     public function hide_remember_me_css() {
-        echo '<style>.login #loginform .forgetmenot { display: none !important; }</style>';
+        wp_add_inline_style('authguard-login', '.login #loginform .forgetmenot { display: none !important; }');
     }
 
     public function force_remember_me_checked($defaults) {
@@ -72,7 +72,7 @@ class Misc
     }
 
     public function hide_register_link_css() {
-        echo '<style>.login #nav a[href*="register"] { display: none !important; }</style>';
+        wp_add_inline_style('authguard-login', '.login #nav a[href*="register"] { display: none !important; }');
     }
 
     public function block_register_page() {
@@ -84,11 +84,11 @@ class Misc
     }
 
     public function hide_lost_password_link_css() {
-        echo '<style>.login #nav a[href*="lostpassword"] { display: none !important; }</style>';
+        wp_add_inline_style('authguard-login', '.login #nav a[href*="lostpassword"] { display: none !important; }');
     }
 
     public function hide_lost_password_nav_css() {
-        echo '<style>.login #nav a.wp-login-lost-password { display: none !important; }</style>';
+        wp_add_inline_style('authguard-login', '.login #nav a.wp-login-lost-password { display: none !important; }');
     }
 
     public function block_lostpassword_page() {
@@ -100,11 +100,11 @@ class Misc
     }
 
     public function hide_privacy_policy_css() {
-        echo '<style>.privacy-policy-page-link { display: none !important; }</style>';
+        wp_add_inline_style('authguard-login', '.privacy-policy-page-link { display: none !important; }');
     }
 
     public function hide_back_to_website_css() {
-        echo '<style>#backtoblog { display: none !important; }</style>';
+        wp_add_inline_style('authguard-login', '#backtoblog { display: none !important; }');
     }
 
     public function restrict_login_by($user, $username, $password) {
