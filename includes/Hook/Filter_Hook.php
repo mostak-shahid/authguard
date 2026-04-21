@@ -318,8 +318,9 @@ class Filter_Hook {
                 'disable_lost_password' => false,
                 'disable_privacy_policy' => false,
                 'disable_back_to_website' => false,
-                'login_by' => 'both', //username, email, both
-                'registered_with_password' => false, //true, false
+                'login_by' => 'both',
+                'restrict_domains' => '',
+                'registered_with_password' => false,
             ],
 
             'page' => [

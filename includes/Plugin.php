@@ -19,6 +19,7 @@ use MosPress\Authguard\Services\Limit_Login;
 use MosPress\Authguard\Services\Hide_Login;
 use MosPress\Authguard\Services\Auto_Login;
 use MosPress\Authguard\Services\Login_redirect;
+use MosPress\Authguard\Services\Misc;
 
 use MosPress\Authguard\UserMeta;
 
@@ -78,6 +79,7 @@ class Plugin {
 		new Hide_Login();
 		new Auto_Login();
 		new Login_redirect();
+		new Misc();
 		new UserMeta();
 	}
 
