@@ -16,7 +16,6 @@ const PasswordPolicies = () => {
     const [indeterminate, setIndeterminate] = useState(false);
     const [checkAll, setCheckAll] = useState(false);
 
-    // WordPress default roles
     const wordpressRoles = [
         { value: 'administrator', label: __('Administrator', 'authguard') },
         { value: 'editor', label: __('Editor', 'authguard') },
@@ -27,17 +26,22 @@ const PasswordPolicies = () => {
 
     useEffect(() => {
         if (settings && settings?.password_policy?.settings) {
-            const passwordPolicySettings = settings.password_policy.settings;
+            const s = settings.password_policy.settings;
             const newValues = {
-                force_password_reset: passwordPolicySettings.force_password_reset || false,
-                password_reset_duration: passwordPolicySettings.password_reset_duration || 30,
-                password_reset_roles: passwordPolicySettings.password_reset_roles || []
+                password_rules_enabled: s.password_rules_enabled || false,
+                min_length: s.min_length || 8,
+                require_uppercase: s.require_uppercase || false,
+                require_number: s.require_number || false,
+                require_special: s.require_special || false,
+                force_password_reset: s.force_password_reset || false,
+                password_reset_duration: s.password_reset_duration || 30,
+                password_reset_roles: s.password_reset_roles || []
             };
             setLocalValues(newValues);
             setOriginalValues(newValues);
             setHasChanges(false);
 
-            const checkedList = passwordPolicySettings.password_reset_roles || [];
+            const checkedList = s.password_reset_roles || [];
             setIndeterminate(!!checkedList.length && checkedList.length < wordpressRoles.length);
             setCheckAll(checkedList.length === wordpressRoles.length);
         }
@@ -106,6 +110,115 @@ const PasswordPolicies = () => {
 
     return (
         <>
+            <div className="setting-unit py-4">
+                <Row type="flex" gutter={[24, 24]}>
+                    <Col xs={24} lg={12} xl={14}>
+                        <Skeleton placeholder={<SkeletonPlaceholder />} loading={settingsLoading} active>
+                            <Title heading={4}>{__("Password Rules", "authguard")}</Title>
+                            <Paragraph>{__("Enable to enforce password complexity rules for all users.", "authguard")}</Paragraph>
+                        </Skeleton>
+                    </Col>
+                    {
+                        !settingsLoading &&
+                        <Col xs={24} lg={12} xl={10}>
+                            <Switch
+                                onChange={(value) => handleChange('password_rules_enabled', value)}
+                                checked={Boolean(localValues?.password_rules_enabled)}
+                            />
+                        </Col>
+                    }
+                </Row>
+            </div>
+
+            {localValues?.password_rules_enabled && (
+                <>
+                    <div className="setting-unit py-4">
+                        <Row type="flex" gutter={[24, 24]}>
+                            <Col xs={24} lg={12} xl={14}>
+                                <Skeleton placeholder={<SkeletonPlaceholder />} loading={settingsLoading} active>
+                                    <Title heading={4}>{__("Minimum Length", "authguard")}</Title>
+                                    <Paragraph>{__("Set the minimum password length required.", "authguard")}</Paragraph>
+                                </Skeleton>
+                            </Col>
+                            {
+                                !settingsLoading &&
+                                <Col xs={24} lg={12} xl={10}>
+                                    <InputNumber
+                                        className="w-full"
+                                        placeholder={__("8", "authguard")}
+                                        value={localValues?.min_length}
+                                        onChange={(value) => handleChange('min_length', value)}
+                                        min={8}
+                                        max={128}
+                                        suffix={__('characters', 'authguard')}
+                                    />
+                                </Col>
+                            }
+                        </Row>
+                    </div>
+
+                    <div className="setting-unit py-4">
+                        <Row type="flex" gutter={[24, 24]}>
+                            <Col xs={24} lg={12} xl={14}>
+                                <Skeleton placeholder={<SkeletonPlaceholder />} loading={settingsLoading} active>
+                                    <Title heading={4}>{__("Require Uppercase", "authguard")}</Title>
+                                    <Paragraph>{__("Require at least one uppercase letter in the password.", "authguard")}</Paragraph>
+                                </Skeleton>
+                            </Col>
+                            {
+                                !settingsLoading &&
+                                <Col xs={24} lg={12} xl={10}>
+                                    <Switch
+                                        onChange={(value) => handleChange('require_uppercase', value)}
+                                        checked={Boolean(localValues?.require_uppercase)}
+                                    />
+                                </Col>
+                            }
+                        </Row>
+                    </div>
+
+                    <div className="setting-unit py-4">
+                        <Row type="flex" gutter={[24, 24]}>
+                            <Col xs={24} lg={12} xl={14}>
+                                <Skeleton placeholder={<SkeletonPlaceholder />} loading={settingsLoading} active>
+                                    <Title heading={4}>{__("Require Number", "authguard")}</Title>
+                                    <Paragraph>{__("Require at least one numeric digit in the password.", "authguard")}</Paragraph>
+                                </Skeleton>
+                            </Col>
+                            {
+                                !settingsLoading &&
+                                <Col xs={24} lg={12} xl={10}>
+                                    <Switch
+                                        onChange={(value) => handleChange('require_number', value)}
+                                        checked={Boolean(localValues?.require_number)}
+                                    />
+                                </Col>
+                            }
+                        </Row>
+                    </div>
+
+                    <div className="setting-unit py-4">
+                        <Row type="flex" gutter={[24, 24]}>
+                            <Col xs={24} lg={12} xl={14}>
+                                <Skeleton placeholder={<SkeletonPlaceholder />} loading={settingsLoading} active>
+                                    <Title heading={4}>{__("Require Special Symbol", "authguard")}</Title>
+                                    <Paragraph>{__("Require at least one special character (e.g. !@#$%) in the password.", "authguard")}</Paragraph>
+                                </Skeleton>
+                            </Col>
+                            {
+                                !settingsLoading &&
+                                <Col xs={24} lg={12} xl={10}>
+                                    <Switch
+                                        onChange={(value) => handleChange('require_special', value)}
+                                        checked={Boolean(localValues?.require_special)}
+                                    />
+                                </Col>
+                            }
+                        </Row>
+                    </div>
+                </>
+            )}
+
             <div className="setting-unit py-4">
                 <Row type="flex" gutter={[24, 24]}>
                     <Col xs={24} lg={12} xl={14}>
