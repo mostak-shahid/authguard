@@ -3,7 +3,7 @@ import { Row, Col, Skeleton, Typography, Switch, Input} from '@douyinfe/semi-ui'
 import { useOutletContext } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import ActionButtons from "./ActionButtons";
-import { FontControl, MediaUploaderControl, MultiColorControl, SkeletonPlaceholder, UnitControl } from "../../components";
+import { FontControl, MediaUploaderControl, MultiColorControl, SkeletonPlaceholder, UnitControl, BorderControl } from "../../components";
 import ImageSelectorStandalone from "../../components/ImageSelector/ImageSelector";
 import { UNITS } from "../../lib/Constants";
 
@@ -48,7 +48,6 @@ const CustomizerPersonalizeButton = () => {
 
     return (
         <>
-            {console.log('Local Values:', localValues)}
             <div className="setting-unit pt-4">
                 <Row type="flex" gutter={[24, 24]}>
                     <Col xs={24} lg={12} xl={14}>
@@ -108,6 +107,28 @@ const CustomizerPersonalizeButton = () => {
                                 defaultValues={localValues?.color}
                                 handleChange={handleChange}
                             /> 
+                        </Col>
+                    }
+                </Row>
+            </div>
+            <div className="setting-unit pt-4">
+                <Row type="flex" gutter={[24, 24]}>
+                    <Col xs={24} lg={12} xl={14}>
+                        <Skeleton placeholder={<SkeletonPlaceholder />} loading={settingsLoading} active>
+                            <Title heading={4}>{__("Border", "authguard")}</Title>
+                            <Paragraph>{__("Adjust the border and border radius for your login button", "authguard")}</Paragraph>
+                        </Skeleton>
+                    </Col>
+                    {
+                        !settingsLoading &&
+                        <Col xs={24} lg={12} xl={10}>
+                            <BorderControl
+                                name='border'
+                                defaultValues={localValues?.border}
+                                borderRadiusValue={localValues?.border_radius}
+                                handleChange={handleChange}
+                                options={['width', 'style', 'color', 'border_radius']}
+                            />
                         </Col>
                     }
                 </Row>

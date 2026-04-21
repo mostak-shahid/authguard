@@ -6,6 +6,10 @@ const MultiColorControl = ({options, defaultValues = {}, name, handleChange}) =>
     // Initialize selected values with defaultValues
     const [values, setValues] = useState(defaultValues);
 
+    useEffect(() => {
+        setValues(defaultValues);
+    }, [defaultValues]);
+
     const updateValue = (option, value) => {
         const updated = { ...values, [option]: value };
         setValues(updated);
@@ -13,8 +17,6 @@ const MultiColorControl = ({options, defaultValues = {}, name, handleChange}) =>
     };
     return (
         <>
-            {console.log('MultiColorControl defaultValues:', defaultValues)}
-            {console.log('MultiColorControl Values:', values)}
             <div className="multi-color-control-wrapper">
                 <Row type="flex" gutter={[16, 16]}>
                     {options.map((option) => (

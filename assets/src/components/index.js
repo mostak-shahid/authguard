@@ -1,6 +1,7 @@
 import { __ } from "@wordpress/i18n";
 import { IllustrationIdle, Illustration404, Logo } from '../lib/Illustrations';
 import BackgroundControl from './BackgroundControl/BackgroundControl';
+import BorderControl from './BorderControl/BorderControl';
 import BoxShadowControl from './BoxShadowControl/BoxShadowControl';
 import BreadcrumbControl from './BreadcrumbControl/BreadcrumbControl';
 import ColorPickerControl from './ColorPickerControl/ColorPickerControl';
@@ -30,6 +31,7 @@ const SkeletonPlaceholder = () => (
 
 export {
     BackgroundControl,
+    BorderControl,
     BoxShadowControl,
     BreadcrumbControl,
     ColorPickerControl,
