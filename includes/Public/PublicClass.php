@@ -81,9 +81,9 @@ class PublicClass
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_style($this->plugin_name, AUTHGUARD_URL . 'assets/css/style.css', array(), $this->version, 'all');
-		// wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/authguard-public.css', array(), $this->version, 'all' );
-		wp_enqueue_style($this->plugin_name . '-public', AUTHGUARD_URL . 'public/css/public-style.css', array(), $this->version, 'all');
+		wp_enqueue_style('authguard', AUTHGUARD_URL . 'assets/css/style.css', array(), $this->version, 'all');
+		// wp_enqueue_style( 'authguard', plugin_dir_url( __FILE__ ) . 'css/authguard-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style('authguard' . '-public', AUTHGUARD_URL . 'public/css/public-style.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -107,16 +107,16 @@ class PublicClass
 		 */
 
 		// wp_enqueue_script($this->plugin_name, plugin_dir_url(__DIR__) . 'assets/js/script.js', array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name, AUTHGUARD_URL . 'assets/js/script.js', array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name . '-public-ajax', AUTHGUARD_URL . 'public/js/public-ajax.js', array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name . '-public-script', AUTHGUARD_URL . 'public/js/public-script.js', array('jquery'), $this->version, false);
+		wp_enqueue_script('authguard', AUTHGUARD_URL . 'assets/js/script.js', array('jquery'), $this->version, false);
+		wp_enqueue_script('authguard' . '-public-ajax', AUTHGUARD_URL . 'public/js/public-ajax.js', array('jquery'), $this->version, false);
+		wp_enqueue_script('authguard' . '-public-script', AUTHGUARD_URL . 'public/js/public-script.js', array('jquery'), $this->version, false);
 		$ajax_params = array(
 			'admin_url' => admin_url(),
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'_wp_nonce' => esc_attr(wp_create_nonce('authguard_wp_nonce')),
 			// 'install_plugin_wpnonce' => esc_attr(wp_create_nonce('updates')),
 		);
-		wp_localize_script($this->plugin_name . '-public-ajax', 'authguard_ajax_obj', $ajax_params);
+		wp_localize_script('authguard' . '-public-ajax', 'authguard_ajax_obj', $ajax_params);
 	}
 	public function authguard_ajax_callback()
 	{

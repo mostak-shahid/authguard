@@ -15,6 +15,7 @@ class Password_Policies
 
         if ($rules_enabled) {
             add_action('admin_enqueue_scripts', [$this, 'enqueue_password_policy_script']);
+            add_action('login_enqueue_scripts', [$this, 'enqueue_login_password_policy_script']);
             add_action('user_profile_update_errors', [$this, 'validate_password_on_profile_update'], 10, 3);
             add_action('validate_password_reset', [$this, 'validate_password_on_reset'], 10, 2);
             add_action('show_user_profile', [$this, 'show_password_hints']);
@@ -63,6 +64,90 @@ class Password_Policies
                 ],
             ]);
         }
+    }
+
+    public function enqueue_login_password_policy_script() {
+        $action = isset($_GET['action']) ? sanitize_text_field(wp_unslash($_GET['action'])) : '';
+        if ($action !== 'rp' && $action !== 'resetpass') {
+            return;
+        }
+
+        wp_enqueue_script(
+            'authguard-password-policies',
+            AUTHGUARD_URL . 'assets/js/password-policies.js',
+            ['jquery'],
+            '1.0.0',
+            true
+        );
+
+        wp_localize_script('authguard-password-policies', 'authguardPasswordPolicies', [
+            'enabled' => true,
+            'rules'   => [
+                'min_length'        => isset($this->settings['min_length']) ? intval($this->settings['min_length']) : 8,
+                'require_uppercase' => !empty($this->settings['require_uppercase']),
+                'require_number'    => !empty($this->settings['require_number']),
+                'require_special'   => !empty($this->settings['require_special']),
+            ],
+            'i18n' => [
+                'heading'     => __('Password Requirements:', 'authguard'),
+                'min_length'  => __('Minimum %d characters', 'authguard'),
+                'uppercase'   => __('At least one uppercase letter', 'authguard'),
+                'number'      => __('At least one number', 'authguard'),
+                'special'     => __('At least one special character (!@#$%...)', 'authguard'),
+                'password_ok' => __('Password meets all requirements.', 'authguard'),
+            ],
+        ]);
+
+        add_action('login_footer', [$this, 'login_password_policy_css']);
+    }
+
+    public function login_password_policy_css() {
+        ?>
+        <style>
+            .authguard-pw-notice {
+                margin: 8px 0 16px;
+                padding: 10px 12px;
+                border-radius: 4px;
+                font-size: 13px;
+                line-height: 1.6;
+            }
+            .authguard-pw-notice.authguard-pw-invalid {
+                background: #fff3f3;
+                border: 1px solid #fcc;
+                color: #a00;
+            }
+            .authguard-pw-notice.authguard-pw-valid {
+                background: #f0f8eb;
+                border: 1px solid #c3e6a8;
+                color: #3a7d2c;
+            }
+            .authguard-pw-notice p {
+                margin: 0 0 6px;
+            }
+            .authguard-pw-notice ul {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+            .authguard-pw-notice ul li {
+                padding: 2px 0;
+            }
+            .authguard-pw-notice ul li::before {
+                margin-right: 6px;
+                font-weight: bold;
+            }
+            .authguard-pw-invalid ul li::before {
+                content: '\2717';
+                color: #a00;
+            }
+            .authguard-pw-valid::before {
+                content: '\2713';
+                color: #3a7d2c;
+                margin-right: 6px;
+                font-weight: bold;
+            }
+        </style>
+        <?php
     }
 
     public function password_policy_inline_css() {
@@ -250,19 +335,19 @@ class Password_Policies
     }
 
     private function store_password_change($user_id, $hashed_password) {
-        $last_passwords = get_user_meta($user_id, 'last_passwords', true);
-        if (!is_array($last_passwords)) {
-            $last_passwords = [];
+        $authguard_last_passwords = get_user_meta($user_id, 'authguard_last_passwords', true);
+        if (!is_array($authguard_last_passwords)) {
+            $authguard_last_passwords = [];
         }
 
-        $last_passwords[] = [
+        $authguard_last_passwords[] = [
             'password' => $hashed_password,
             'date'     => current_time('mysql'),
         ];
 
-        $last_passwords = array_slice($last_passwords, -5);
+        $authguard_last_passwords = array_slice($authguard_last_passwords, -5);
 
-        update_user_meta($user_id, 'last_passwords', $last_passwords);
+        update_user_meta($user_id, 'authguard_last_passwords', $authguard_last_passwords);
         update_user_meta($user_id, 'authguard_last_password_change', current_time('mysql'));
     }
 

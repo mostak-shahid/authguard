@@ -101,8 +101,8 @@ class AdminClass
 			// );
 		}
 		// wp_enqueue_style($this->plugin_name . 'jquery-ui', AUTHGUARD_URL . 'assets/css/jquery-ui.css', array(), $this->version, 'all');
-		wp_enqueue_style($this->plugin_name, AUTHGUARD_URL . 'assets/css/style.css', array(), $this->version, 'all');
-		wp_enqueue_style($this->plugin_name . '-admin', AUTHGUARD_URL . 'admin/css/admin-style.css', array(), $this->version, 'all');
+		wp_enqueue_style('authguard', AUTHGUARD_URL . 'assets/css/style.css', array(), $this->version, 'all');
+		wp_enqueue_style('authguard' . '-admin', AUTHGUARD_URL . 'admin/css/admin-style.css', array(), $this->version, 'all');
 		wp_enqueue_style( 'wp-components' );
 	}
 
@@ -125,12 +125,12 @@ class AdminClass
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		wp_enqueue_script($this->plugin_name, AUTHGUARD_URL . 'assets/js/script.js', array('jquery'), $this->version, false);
+		wp_enqueue_script('authguard', AUTHGUARD_URL . 'assets/js/script.js', array('jquery'), $this->version, false);
 		wp_enqueue_script('jquery');
 		wp_enqueue_media();
 		if ($hook == 'toplevel_page_authguard') {
 			// wp_enqueue_script(
-			// 	$this->plugin_name . '-react',
+			// 	'authguard' . '-react',
 			// 	AUTHGUARD_URL . 'build/index.js',
 			// 	array('wp-element', 'wp-components', 'wp-api-fetch', 'wp-i18n', 'wp-media-utils', 'wp-block-editor', 'react', 'react-dom'),
 			// 	$this->version,
@@ -138,7 +138,7 @@ class AdminClass
 			// );
 			$asset_path = AUTHGUARD_URL . 'assets/build/';
 			wp_enqueue_script(
-				$this->plugin_name . '-react',
+				'authguard' . '-react',
 				$asset_path . 'app.js',
 				[],
 				// filemtime($asset_path . 'app.js'),
@@ -148,7 +148,7 @@ class AdminClass
 			
 			// Configure wp-api-fetch with proper settings before React loads
 			wp_add_inline_script(
-				$this->plugin_name . '-react',
+				'authguard' . '-react',
 				sprintf(
 					'window.wpApiSettings = { root: "%s", nonce: "%s" };',
 					esc_url( rest_url() ),
@@ -158,8 +158,8 @@ class AdminClass
 			);
 		}
 
-		wp_enqueue_script($this->plugin_name . '-admin-ajax', AUTHGUARD_URL . 'admin/js/admin-ajax.js', array('jquery'), $this->version, false);
-		wp_enqueue_script($this->plugin_name . '-admin-script', AUTHGUARD_URL . 'admin/js/admin-script.js', array('jquery'), $this->version, false);
+		wp_enqueue_script('authguard' . '-admin-ajax', AUTHGUARD_URL . 'admin/js/admin-ajax.js', array('jquery'), $this->version, false);
+		wp_enqueue_script('authguard' . '-admin-script', AUTHGUARD_URL . 'admin/js/admin-script.js', array('jquery'), $this->version, false);
 		$ajax_params = [
 			'admin_url' => admin_url(),
 			'home_url' => home_url(),
@@ -182,7 +182,7 @@ class AdminClass
 			$ajax_params['isPro'] = true;
 			$ajax_params['proVersion'] = $version;
 		}
-		wp_localize_script($this->plugin_name . '-admin-ajax', 'authguard_ajax_obj', $ajax_params);
+		wp_localize_script('authguard' . '-admin-ajax', 'authguard_ajax_obj', $ajax_params);
 	}
 }
 
