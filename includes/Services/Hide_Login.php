@@ -16,17 +16,13 @@ class Hide_Login
 				isset($options['hide_login']['login_url']) &&
 				!empty($options['hide_login']['login_url'])
 			) ? sanitize_text_field(wp_unslash($options['hide_login']['login_url'])) : '';
-		error_log('Custom login slug: ' . $this->login_slug);
  		if ($this->login_slug) {
-			// Setup rewrite and blocking
-			// add_action( 'init', [ $this, 'add_rewrite_rule' ] );
-			// add_filter( 'query_vars', [ $this, 'register_query_var' ] );
-			// add_filter( 'template_include', [ $this, 'render_login_template' ] );
-			// add_action( 'init', [ $this, 'block_wp_login' ], 1 );
 			add_action( 'init', [ $this, 'add_rewrite_rule' ] );
 			add_filter( 'query_vars', [ $this, 'register_query_var' ] );
 			add_action( 'template_redirect', [ $this, 'load_default_login_template' ] );
 			add_action( 'wp_loaded', [ $this, 'block_wp_login' ], 1 );
+			add_filter( 'site_url', [ $this, 'filter_site_url' ], 10, 4 );
+			add_filter( 'network_site_url', [ $this, 'filter_network_site_url' ], 10, 3 );
 		}
 
         // Flush rewrite rules on activation
@@ -125,6 +121,26 @@ class Hide_Login
             }
             exit;
         }
+    }
+
+    /**
+     * Replace wp-login.php in site_url() with the custom login slug
+     */
+    public function filter_site_url( $url, $path, $scheme, $blog_id ) {
+        if ( strpos( $path, 'wp-login.php' ) !== false ) {
+            return str_replace( 'wp-login.php', $this->login_slug, $url );
+        }
+        return $url;
+    }
+
+    /**
+     * Replace wp-login.php in network_site_url() with the custom login slug
+     */
+    public function filter_network_site_url( $url, $path, $scheme ) {
+        if ( strpos( $path, 'wp-login.php' ) !== false ) {
+            return str_replace( 'wp-login.php', $this->login_slug, $url );
+        }
+        return $url;
     }
 
     /**

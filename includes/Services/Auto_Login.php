@@ -56,7 +56,7 @@ class Auto_Login
                            name="authguard_email"
                            class="input"
                            placeholder="<?php echo esc_attr__('Enter your email address', 'authguard'); ?>"
-                           required />
+                           />
                 </p>
                 <button type="button" id="authguard-send-login-link" class="button button-primary button-large" style="width: 100%;">
                     <?php echo esc_html__('Send Login Link', 'authguard'); ?>
@@ -105,6 +105,7 @@ class Auto_Login
                     e.preventDefault();
                     document.body.classList.add('authguard-auto-login-mode');
                     autoLoginForm.style.display = 'block';
+                    emailInput.setAttribute('required', 'required');
                     emailInput.focus();
                 });
             }
@@ -114,6 +115,7 @@ class Auto_Login
                     autoLoginForm.style.display = 'none';
                     document.body.classList.remove('authguard-auto-login-mode');
                     emailInput.value = '';
+                    emailInput.removeAttribute('required');
                 });
             }
 

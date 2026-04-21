@@ -18,6 +18,7 @@ use MosPress\Authguard\Services\Two_FA;
 use MosPress\Authguard\Services\Limit_Login;
 use MosPress\Authguard\Services\Hide_Login;
 use MosPress\Authguard\Services\Auto_Login;
+use MosPress\Authguard\Services\Login_redirect;
 
 use MosPress\Authguard\UserMeta;
 
@@ -76,6 +77,7 @@ class Plugin {
 		new Limit_Login();
 		new Hide_Login();
 		new Auto_Login();
+		new Login_redirect();
 		new UserMeta();
 	}
 
