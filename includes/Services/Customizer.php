@@ -89,8 +89,8 @@ class Customizer
 	public function enqueue_login_assets() {
 		// Enqueue a base style handle to attach inline CSS
 		// wp_register_style('authguard-login-style', false); // no external CSS file
-		wp_enqueue_style('authguard-login-style', AUTHGUARD_URL . 'assets/css/login.css', array(), '1.0.0', 'all');
-		wp_enqueue_script('authguard-login-script', AUTHGUARD_URL . 'assets/js/login.js', array('jquery'), '1.0.0', false);
+		wp_enqueue_style('authguard-login', AUTHGUARD_URL . 'assets/css/login.css', array(), '1.0.0', 'all');
+		wp_enqueue_script('authguard-login', AUTHGUARD_URL . 'assets/js/login.js', array('jquery'), '1.0.0', false);
 		
 		// wp_enqueue_style('authguard-login-style');
 		$css = '';
