@@ -13,6 +13,8 @@ const MultiColorControl = ({options, defaultValues = {}, name, handleChange}) =>
     };
     return (
         <>
+            {console.log('MultiColorControl defaultValues:', defaultValues)}
+            {console.log('MultiColorControl Values:', values)}
             <div className="multi-color-control-wrapper">
                 <Row type="flex" gutter={[16, 16]}>
                     {options.map((option) => (

@@ -48,6 +48,7 @@ const CustomizerPersonalizeButton = () => {
 
     return (
         <>
+            {console.log('Local Values:', localValues)}
             <div className="setting-unit pt-4">
                 <Row type="flex" gutter={[24, 24]}>
                     <Col xs={24} lg={12} xl={14}>
@@ -81,9 +82,9 @@ const CustomizerPersonalizeButton = () => {
                         !settingsLoading &&
                         <Col xs={24} lg={12} xl={10}>
                             <MultiColorControl
-                                name='customizer.redesign.button.background'
+                                name='background'
                                 options={['normal', 'hover', 'active']}
-                                defaultValues={settings?.customizer?.redesign?.button?.background}
+                                defaultValues={localValues?.background}
                                 handleChange={handleChange}
                             /> 
                         </Col>
@@ -102,9 +103,9 @@ const CustomizerPersonalizeButton = () => {
                         !settingsLoading &&
                         <Col xs={24} lg={12} xl={10}>
                             <MultiColorControl
-                                name='customizer.redesign.button.color'
+                                name='color'
                                 options={['normal', 'hover', 'active']}
-                                defaultValues={settings?.customizer?.redesign?.button?.color}
+                                defaultValues={localValues?.color}
                                 handleChange={handleChange}
                             /> 
                         </Col>
