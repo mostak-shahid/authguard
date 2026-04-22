@@ -18,9 +18,6 @@ class Password_Policies
             add_action('login_enqueue_scripts', [$this, 'enqueue_login_password_policy_script']);
             add_action('user_profile_update_errors', [$this, 'validate_password_on_profile_update'], 10, 3);
             add_action('validate_password_reset', [$this, 'validate_password_on_reset'], 10, 2);
-            add_action('show_user_profile', [$this, 'show_password_hints']);
-            add_action('edit_user_profile', [$this, 'show_password_hints']);
-            add_action('admin_head', [$this, 'password_policy_inline_css']);
         }
 
         if ($force_reset) {
@@ -63,6 +60,12 @@ class Password_Policies
                     'password_ok' => __('Password meets all requirements.', 'authguard'),
                 ],
             ]);
+
+            wp_register_style('authguard-password-policies-css', false);
+            wp_enqueue_style('authguard-password-policies-css');
+            wp_add_inline_style('authguard-password-policies-css', $this->get_admin_css());
+
+            wp_add_inline_script('authguard-password-policies', $this->get_password_hints_js(), 'after');
         }
     }
 
@@ -98,110 +101,103 @@ class Password_Policies
             ],
         ]);
 
-        add_action('login_footer', [$this, 'login_password_policy_css']);
+        wp_register_style('authguard-password-policies-css', false);
+        wp_enqueue_style('authguard-password-policies-css');
+        wp_add_inline_style('authguard-password-policies-css', $this->get_login_css());
     }
 
-    public function login_password_policy_css() {
-        ?>
-        <style>
-            .authguard-pw-notice {
-                margin: 8px 0 16px;
-                padding: 10px 12px;
-                border-radius: 4px;
-                font-size: 13px;
-                line-height: 1.6;
-            }
-            .authguard-pw-notice.authguard-pw-invalid {
-                background: #fff3f3;
-                border: 1px solid #fcc;
-                color: #a00;
-            }
-            .authguard-pw-notice.authguard-pw-valid {
-                background: #f0f8eb;
-                border: 1px solid #c3e6a8;
-                color: #3a7d2c;
-            }
-            .authguard-pw-notice p {
-                margin: 0 0 6px;
-            }
-            .authguard-pw-notice ul {
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
-            .authguard-pw-notice ul li {
-                padding: 2px 0;
-            }
-            .authguard-pw-notice ul li::before {
-                margin-right: 6px;
-                font-weight: bold;
-            }
-            .authguard-pw-invalid ul li::before {
-                content: '\2717';
-                color: #a00;
-            }
-            .authguard-pw-valid::before {
-                content: '\2713';
-                color: #3a7d2c;
-                margin-right: 6px;
-                font-weight: bold;
-            }
-        </style>
-        <?php
+    private function get_login_css() {
+        return <<<'CSS'
+.authguard-pw-notice {
+    margin: 8px 0 16px;
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.authguard-pw-notice.authguard-pw-invalid {
+    background: #fff3f3;
+    border: 1px solid #fcc;
+    color: #a00;
+}
+.authguard-pw-notice.authguard-pw-valid {
+    background: #f0f8eb;
+    border: 1px solid #c3e6a8;
+    color: #3a7d2c;
+}
+.authguard-pw-notice p {
+    margin: 0 0 6px;
+}
+.authguard-pw-notice ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.authguard-pw-notice ul li {
+    padding: 2px 0;
+}
+.authguard-pw-notice ul li::before {
+    margin-right: 6px;
+    font-weight: bold;
+}
+.authguard-pw-invalid ul li::before {
+    content: '\2717';
+    color: #a00;
+}
+.authguard-pw-valid::before {
+    content: '\2713';
+    color: #3a7d2c;
+    margin-right: 6px;
+    font-weight: bold;
+}
+CSS;
     }
 
-    public function password_policy_inline_css() {
-        $screen = get_current_screen();
-        $allowed_pages = ['profile', 'user-edit', 'user-new'];
-        if (!$screen || !in_array($screen->base, $allowed_pages, true)) {
-            return;
-        }
-        ?>
-        <style>
-            .authguard-pw-notice {
-                margin: 8px 0 0;
-                padding: 10px 12px;
-                border-radius: 4px;
-                font-size: 13px;
-                line-height: 1.5;
-                max-width: 400px;
-            }
-            .authguard-pw-notice.authguard-pw-invalid {
-                background: #fff3f3;
-                border: 1px solid #fcc;
-                color: #a00;
-            }
-            .authguard-pw-notice.authguard-pw-valid {
-                background: #f0f8eb;
-                border: 1px solid #c3e6a8;
-                color: #3a7d2c;
-            }
-            .authguard-pw-notice p {
-                margin: 0 0 6px;
-            }
-            .authguard-pw-notice ul {
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
-            .authguard-pw-notice ul li {
-                padding: 2px 0;
-            }
-            .authguard-pw-notice ul li .dashicons {
-                font-size: 16px;
-                width: 16px;
-                height: 16px;
-                vertical-align: middle;
-                margin-right: 4px;
-            }
-            .authguard-pw-invalid .dashicons-dismiss {
-                color: #a00;
-            }
-            .authguard-pw-valid .dashicons-yes-alt {
-                color: #3a7d2c;
-            }
-        </style>
-        <?php
+    private function get_admin_css() {
+        return <<<'CSS'
+.authguard-pw-notice {
+    margin: 8px 0 0;
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 400px;
+}
+.authguard-pw-notice.authguard-pw-invalid {
+    background: #fff3f3;
+    border: 1px solid #fcc;
+    color: #a00;
+}
+.authguard-pw-notice.authguard-pw-valid {
+    background: #f0f8eb;
+    border: 1px solid #c3e6a8;
+    color: #3a7d2c;
+}
+.authguard-pw-notice p {
+    margin: 0 0 6px;
+}
+.authguard-pw-notice ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.authguard-pw-notice ul li {
+    padding: 2px 0;
+}
+.authguard-pw-notice ul li .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+.authguard-pw-invalid .dashicons-dismiss {
+    color: #a00;
+}
+.authguard-pw-valid .dashicons-yes-alt {
+    color: #3a7d2c;
+}
+CSS;
     }
 
     private function get_password_errors($password) {
@@ -252,63 +248,63 @@ class Password_Policies
         }
     }
 
-    public function show_password_hints($user) {
+    private function get_password_hints_js() {
         $min_length = isset($this->settings['min_length']) ? intval($this->settings['min_length']) : 8;
+        ob_start();
         ?>
-        <script type="text/javascript">
-        jQuery(document).ready(function($) {
-            var $pass1 = $('#pass1');
-            if ($pass1.length === 0) return;
-            var $hint = $('<div class="authguard-pw-notice" id="authguard-pw-hint"></div>');
-            $pass1.closest('.wp-pwd, #password').after($hint);
-            if ($pass1.closest('.wp-pwd').length === 0 && $pass1.closest('#password').length === 0) {
-                $pass1.after($hint);
+jQuery(document).ready(function($) {
+    var $pass1 = $('#pass1');
+    if ($pass1.length === 0) return;
+    var $hint = $('<div class="authguard-pw-notice" id="authguard-pw-hint"></div>');
+    $pass1.closest('.wp-pwd, #password').after($hint);
+    if ($pass1.closest('.wp-pwd').length === 0 && $pass1.closest('#password').length === 0) {
+        $pass1.after($hint);
+    }
+
+    function updateHint(password) {
+        if (!password) { $hint.html(''); return; }
+        var errors = [];
+        <?php if (!empty($this->settings['min_length'])) : ?>
+        if (password.length < <?php echo intval($this->settings['min_length']); ?>) {
+            errors.push('<?php echo esc_js(sprintf(__('Minimum %d characters', 'authguard'), $min_length)); ?>');
+        }
+        <?php endif; ?>
+        <?php if (!empty($this->settings['require_uppercase'])) : ?>
+        if (!/[A-Z]/.test(password)) {
+            errors.push('<?php echo esc_js(__('One uppercase letter required', 'authguard')); ?>');
+        }
+        <?php endif; ?>
+        <?php if (!empty($this->settings['require_number'])) : ?>
+        if (!/[0-9]/.test(password)) {
+            errors.push('<?php echo esc_js(__('One number required', 'authguard')); ?>');
+        }
+        <?php endif; ?>
+        <?php if (!empty($this->settings['require_special'])) : ?>
+        if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+            errors.push('<?php echo esc_js(__('One special character required', 'authguard')); ?>');
+        }
+        <?php endif; ?>
+
+        if (errors.length === 0) {
+            $hint.removeClass('authguard-pw-invalid').addClass('authguard-pw-valid').html(
+                '<span class="dashicons dashicons-yes-alt"></span> <?php echo esc_js(__('Password meets requirements.', 'authguard')); ?>'
+            );
+        } else {
+            var html = '<p class="authguard-pw-heading"><strong><?php echo esc_js(__('Password Requirements:', 'authguard')); ?></strong></p><ul class="authguard-pw-rules">';
+            for (var i = 0; i < errors.length; i++) {
+                html += '<li><span class="dashicons dashicons-dismiss"></span> ' + errors[i] + '</li>';
             }
+            html += '</ul>';
+            $hint.removeClass('authguard-pw-valid').addClass('authguard-pw-invalid').html(html);
+        }
+    }
 
-            function updateHint(password) {
-                if (!password) { $hint.html(''); return; }
-                var errors = [];
-                <?php if (!empty($this->settings['min_length'])) : ?>
-                if (password.length < <?php echo intval($this->settings['min_length']); ?>) {
-                    errors.push('<?php echo esc_js(sprintf(__('Minimum %d characters', 'authguard'), $min_length)); ?>');
-                }
-                <?php endif; ?>
-                <?php if (!empty($this->settings['require_uppercase'])) : ?>
-                if (!/[A-Z]/.test(password)) {
-                    errors.push('<?php echo esc_js(__('One uppercase letter required', 'authguard')); ?>');
-                }
-                <?php endif; ?>
-                <?php if (!empty($this->settings['require_number'])) : ?>
-                if (!/[0-9]/.test(password)) {
-                    errors.push('<?php echo esc_js(__('One number required', 'authguard')); ?>');
-                }
-                <?php endif; ?>
-                <?php if (!empty($this->settings['require_special'])) : ?>
-                if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-                    errors.push('<?php echo esc_js(__('One special character required', 'authguard')); ?>');
-                }
-                <?php endif; ?>
-
-                if (errors.length === 0) {
-                    $hint.removeClass('authguard-pw-invalid').addClass('authguard-pw-valid').html(
-                        '<span class="dashicons dashicons-yes-alt"></span> <?php echo esc_js(__('Password meets requirements.', 'authguard')); ?>'
-                    );
-                } else {
-                    var html = '<p class="authguard-pw-heading"><strong><?php echo esc_js(__('Password Requirements:', 'authguard')); ?></strong></p><ul class="authguard-pw-rules">';
-                    for (var i = 0; i < errors.length; i++) {
-                        html += '<li><span class="dashicons dashicons-dismiss"></span> ' + errors[i] + '</li>';
-                    }
-                    html += '</ul>';
-                    $hint.removeClass('authguard-pw-valid').addClass('authguard-pw-invalid').html(html);
-                }
-            }
-
-            $pass1.on('input propertychange', function() {
-                updateHint($(this).val());
-            });
-        });
-        </script>
+    $pass1.on('input propertychange', function() {
+        updateHint($(this).val());
+    });
+});
         <?php
+        return ob_get_clean();
     }
 
     public function track_password_change($user_id, $old_user_data) {
