@@ -375,5 +375,5 @@ function authguard_data_cleanup(){
 	}
 
 	// Log the uninstall (optional)
-	error_log( 'AuthGuard: Complete uninstall cleanup completed.' );
+	// error_log( 'AuthGuard: Complete uninstall cleanup completed.' );
 }

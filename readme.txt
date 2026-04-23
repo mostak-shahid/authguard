@@ -1,6 +1,6 @@
 === AuthGuard ===
 Contributors: mostakshahid
-Tags: login customizer, custom login, login page, authentication, security, 2fa, two-factor, login redirect, limit login, hide login, captcha, wordpress login, wp-login
+Tags: login, security, authentication, custom-login, 2fa
 Requires at least: 5.8
 Tested up to: 6.9
 Requires PHP: 7.4
@@ -8,7 +8,7 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.txt
 
-Transform your WordPress login experience with AuthGuard - the ultimate login page customizer and security suite. Redesign your login, registration, and password reset screens with full visual control while protecting your site with powerful security features.
+Customize your WordPress login page with visual controls and secure it with 2FA, captcha, and brute force protection.
 
 == Description ==
 

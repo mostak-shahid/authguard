@@ -330,7 +330,7 @@ class Customizer
 		$css .= $this->authguard_generate_background_css($background);
 		$css .= "}";
 
-		wp_add_inline_style('authguard-login-style', $css);
+		wp_add_inline_style('authguard-login', $css);
 	}
 	public function authguard_add_login_body_class( $classes ) {
 		$classes[] = 'authguard-login-page'; // 👈 change this to your desired class name

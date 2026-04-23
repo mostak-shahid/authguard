@@ -1438,7 +1438,7 @@ class Rest_API
             if (!$admin_notification_sent) {
                 $error_message .= 'Admin notification not sent to: ' . $admin_email . '. ';
             }
-            error_log('AuthGuard - ' . $error_message);
+            // error_log('AuthGuard - ' . $error_message);
         }
 
         // self::send_to_third_party(array(
@@ -1660,7 +1660,7 @@ class Rest_API
         $response = wp_remote_post($webhook_url, $args);
 
         if (is_wp_error($response)) {
-            error_log('AuthGuard - Failed to send feedback to webhook: ' . $response->get_error_message());
+            // error_log('AuthGuard - Failed to send feedback to webhook: ' . $response->get_error_message());
             return false;
         }
 
