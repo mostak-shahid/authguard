@@ -26,7 +26,7 @@ class Two_FA
 			add_action( 'wp_login', [ $this, 'on_wp_login' ], 10, 2 );
 			add_action( 'template_redirect', [ $this, 'maybe_show_2fa_form' ] );
 			add_action( 'login_init', [ $this, 'prepare_login_screen' ] );
-			add_action( 'login_enqueue_scripts', [ $this, 'enqueue_login_styles' ] );
+			add_action( 'login_enqueue_scripts', [ $this, 'enqueue_login_styles' ], 21 );
 			add_filter( 'login_message', [ $this, 'filter_login_message' ] );
 			add_action( 'admin_post_nopriv_verify_email_2fa', [ $this, 'handle_verify' ] );
 			add_action( 'admin_post_nopriv_resend_email_2fa', [ $this, 'handle_resend' ] );
