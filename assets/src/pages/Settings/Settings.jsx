@@ -255,7 +255,7 @@ const Settings = () => {
                     headerLine={true}
                 >
                     {/* {console.log(settings)} */}
-                    <Outlet context={{ settings, settingsLoading, handleSubmit, handleReset }} />
+                    <Outlet context={{ settings, settingsLoading, setSettingsReload, handleSubmit, handleReset }} />
                 </Card>
             </Content>
         </FullWidthLayout>

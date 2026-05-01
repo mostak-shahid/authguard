@@ -65,3 +65,6 @@ README.md
 **/*.map
 **/*.css.map
 **/*.js.LICENSE.txt
+
+# Build folder PHP files
+assets/build/**/*.php
