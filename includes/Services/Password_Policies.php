@@ -15,7 +15,7 @@ class Password_Policies
 
         if ($rules_enabled) {
             add_action('admin_enqueue_scripts', [$this, 'enqueue_password_policy_script']);
-            add_action('login_enqueue_scripts', [$this, 'enqueue_login_password_policy_script']);
+            add_action('login_enqueue_scripts', [$this, 'enqueue_login_password_policy_script'], 21);
             add_action('user_profile_update_errors', [$this, 'validate_password_on_profile_update'], 10, 3);
             add_action('validate_password_reset', [$this, 'validate_password_on_reset'], 10, 2);
         }
