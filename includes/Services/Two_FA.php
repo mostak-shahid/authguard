@@ -172,6 +172,9 @@ class Two_FA
 			return '';
 		}
 
+		// Generate nonce for AJAX resend request
+		$resend_nonce = wp_create_nonce( 'resend_email_2fa' );
+
 		ob_start();
 		?>
 		<div class="authguard-2fa-wrapper" role="main">
@@ -187,13 +190,36 @@ class Two_FA
 				</div>
 				<p><?php echo esc_html__( 'We sent a verification code to the email address associated with your account. Enter the code below to finish signing in. This code will expire in 5 minutes.', 'authguard' ); ?></p>
 			</form>
-			<form class="authguard-2fa-secondary" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-				<input type="hidden" name="action" value="resend_email_2fa" />
-				<?php wp_nonce_field( 'resend_email_2fa' ); ?>
-				<button class="button" type="submit"><?php echo esc_html__( 'Resend code', 'authguard' ); ?></button>
+			<div class="authguard-2fa-secondary">
+				<a href="#" class="button authguard-2fa-resend-btn" data-nonce="<?php echo esc_attr( $resend_nonce ); ?>"><?php echo esc_html__( 'Resend code', 'authguard' ); ?></a>
 				<p class="authguard-2fa-help"><?php echo esc_html__( 'Need to try again?', 'authguard' ); ?></p>
-			</form>
+			</div>
 		</div>
+		<script type="text/javascript">
+		(function() {
+			var resendBtn = document.querySelector('.authguard-2fa-resend-btn');
+			if (resendBtn) {
+				resendBtn.addEventListener('click', function(e) {
+					e.preventDefault();
+					var nonce = this.getAttribute('data-nonce');
+					var xhr = new XMLHttpRequest();
+					xhr.open('POST', '<?php echo esc_js( admin_url( 'admin-post.php' ) ); ?>', true);
+					xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+					xhr.onload = function() {
+						if (xhr.status === 200) {
+							var response = xhr.responseText;
+							alert('<?php echo esc_js( __( 'A new code was sent to your email address.', 'authguard' ) ); ?>');
+							location.reload();
+						}
+					};
+					xhr.onerror = function() {
+						alert('<?php echo esc_js( __( 'An error occurred. Please try again.', 'authguard' ) ); ?>');
+					};
+					xhr.send('action=resend_email_2fa&_wpnonce=' + encodeURIComponent(nonce));
+				});
+			}
+		})();
+		</script>
 		<?php
 		return ob_get_clean();
 	}
