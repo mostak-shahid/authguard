@@ -50,7 +50,7 @@ class Auto_Login
             .login form {
                 position: relative;
             }
-            body.authguard-auto-login-enabled.login form {
+            body.authguard-auto-login-enabled.login form#loginform {
                 padding-bottom: 100px;
             }
             body.authguard-auto-login-enabled.login form #authguard-auto-login-wrapper{
