@@ -95,34 +95,6 @@ class Customizer
 		// wp_enqueue_style('authguard-login-style');
 		$css = '';
 
-		// Handle Jarallax scripts if video background
-		if (
-			isset($this->options['customizer']['redesign']['background']['type']) &&
-			sanitize_text_field(wp_unslash($this->options['customizer']['redesign']['background']['type'])) === 'video' &&
-			isset($this->options['customizer']['redesign']['background']['video'])
-		) {
-			wp_enqueue_style('jarallax.min', AUTHGUARD_URL . 'assets/plugins/jarallax/jarallax.min.css');
-			wp_enqueue_script('jarallax.min', AUTHGUARD_URL . 'assets/plugins/jarallax/jarallax.min.js', ['jquery'], null, true);
-			wp_enqueue_script('jarallax-video.min', AUTHGUARD_URL . 'assets/plugins/jarallax/jarallax-video.min.js', ['jquery'], null, true);
-
-			$video = esc_url($this->options['customizer']['redesign']['background']['video'] ?? '');
-			// Output the video container markup
-			add_action('login_footer', function() use ($video) {
-				echo '<div class="jarallax" data-jarallax data-video-src="' . esc_url($video) . '"></div>';
-			});
-			// Add inline CSS
-			$css .= "
-			.login .jarallax {
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				z-index: -2;
-			}";
-
-		}
-
 		
 		$overlay_color = isset($this->options['customizer']['redesign']['background']['overlay']) ? sanitize_text_field(wp_unslash($this->options['customizer']['redesign']['background']['overlay'])) : '';
 		

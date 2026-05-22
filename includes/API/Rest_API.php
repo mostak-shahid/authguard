@@ -39,87 +39,11 @@ class Rest_API
         add_action('rest_api_init', [$this, 'rest_api_init']);
     }
     public function rest_api_init()
-    {        
-        register_rest_route(self::NAMESPACE, '/plugins', [
-            'methods' => 'GET',
-            'callback' => function () {
-                $response = wp_remote_get('https://api.wordpress.org/plugins/info/1.2/?action=query_plugins&request[author]=mostakshahid&request[per_page]=24');
-                if (is_wp_error($response)) {
-                    return new WP_Error('api_error', 'Failed to fetch plugins', ['status' => 500]);
-                }
-                return json_decode(wp_remote_retrieve_body($response), true);
-            },
-			'permission_callback' => function () {
-				return current_user_can('manage_options');
-			},
-        ]);
-        
-        // // ✅ Get posts (with embed info)
-        // // GET /wp-json/authguard/v1/posts?page=1&per_page=10&status=publish&search=hello
-        // register_rest_route( self::NAMESPACE, '/posts', [
-        //     'methods'  => 'GET',
-        //     'callback' => [$this, 'get_posts'],
-        //     'permission_callback' => function () {
-        //         return current_user_can( 'edit_posts' );
-        //     },
-        //     'args' => [
-        //         'page'     => ['type' => 'integer'],
-        //         'per_page' => ['type' => 'integer'],
-        //         'status'   => ['type' => 'string'],
-        //         'search'   => ['type' => 'string'],
-        //         'orderby'  => ['type' => 'string'], // title|date
-        //         'order'    => ['type' => 'string'], // asc|desc
-        //     ],
-        // ]);
-
-        // // ✅ Change status of a single post
-        // // POST /wp-json/authguard/v1/post/123/status
-        // // { "status": "draft" }
-        // register_rest_route( self::NAMESPACE, '/post/(?P<id>\d+)/status', [
-        //     'methods'  => 'POST',
-        //     'callback' => [$this, 'change_post_status'],
-        //     'permission_callback' => function () {
-        //         return current_user_can( 'edit_posts' );
-        //     },
-        //     'args' => [
-        //         'status' => [
-        //             'required' => true,
-        //             'type'     => 'string',
-        //             'enum'     => [ 'publish', 'draft', 'trash' ],
-        //         ],
-        //     ],
-        // ]);
-
-        // // ✅ Bulk status change
-        // // POST /wp-json/authguard/v1/posts/status
-        // // { "ids": [1,2,3], "status": "trash" }
-
-        // register_rest_route( self::NAMESPACE, '/posts/status', [
-        //     'methods'  => 'POST',
-        //     'callback' => [$this, 'bulk_change_status'],
-        //     'permission_callback' => function () {
-        //         return current_user_can( 'edit_posts' );
-        //     },
-        //     'args' => [
-        //         'ids' => [
-        //             'required' => true,
-        //             'type'     => 'array',
-        //             'items'    => [ 'type' => 'integer' ],
-        //         ],
-        //         'status' => [
-        //             'required' => true,
-        //             'type'     => 'string',
-        //             'enum'     => [ 'publish', 'draft', 'trash' ],
-        //         ],
-        //     ],
-        // ]);
-
-        
+    {                
 		register_rest_route( self::NAMESPACE, '/options',
 			array(
 				'methods'  => 'GET',
 				'callback' => [$this, 'get_settings'],
-				// 'permission_callback' => '__return_true', // Allow public access
 				'permission_callback' => function () {
                     return current_user_can('manage_options');
                 },
@@ -131,7 +55,6 @@ class Rest_API
 			array(
 				'methods'             => 'POST',
 				'callback'            => [$this, 'update_settings'],
-				// 'permission_callback' => '__return_true'
 				'permission_callback' => function () {
                     return current_user_can('manage_options');
                 },
@@ -181,7 +104,6 @@ class Rest_API
             array(
                 'methods' => 'POST',
                 'callback' => [$this, 'rest_feedback'],
-				// 'permission_callback' => '__return_true'
                 'permission_callback' => function () {
                     return current_user_can('manage_options');
                 },
@@ -192,7 +114,6 @@ class Rest_API
 			array(
 				'methods'  => 'GET',
 				'callback' => [$this, 'rest_set_settings_theme'],
-				// 'permission_callback' => '__return_true', // Allow public access
 				'permission_callback' => function () {
                     return current_user_can('manage_options');
                 },
@@ -214,10 +135,9 @@ class Rest_API
 			array(
 				'methods'  => 'GET',
 				'callback' => [$this, 'rest_get_settings_theme'],
-				'permission_callback' => '__return_true', // Allow public access
-				// 'permission_callback' => function () {
-                //     return current_user_can('manage_options');
-                // },
+				'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
 			)
 		);
 
@@ -250,14 +170,6 @@ class Rest_API
                 },
 			)
 		);
-        
-        // register_rest_route( self::NAMESPACE, '/deactivation-link',
-        //     array(
-        //         'methods' => 'GET',
-        //         'callback' => array( $this, 'get_deactivation_link' ),
-        //         'permission_callback' => array( $this, 'check_permission' ),
-        //     )
-        // );
 
         //Log table REST routes
         /**
@@ -268,7 +180,10 @@ class Rest_API
             array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( LogsController::class, 'get_logs' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args' => [
                     'page' => ['sanitize_callback' => 'absint', 'default' => 1],
                     'per_page' => ['sanitize_callback' => 'absint', 'default' => 5],
@@ -287,7 +202,10 @@ class Rest_API
             array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( LogsController::class, 'search_logs' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'q'        => array(
                         'required'          => true,
@@ -310,7 +228,10 @@ class Rest_API
             array(
                 'methods'             => WP_REST_Server::CREATABLE,
                 'callback'            => array( LogsController::class, 'create_log' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'user_id'     => array(
                         'required'          => true,
@@ -345,7 +266,10 @@ class Rest_API
             array(
                 'methods'             => WP_REST_Server::EDITABLE,
                 'callback'            => array( LogsController::class, 'update_log' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'id'          => array(
                         'required'          => true,
@@ -377,8 +301,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/logs/(?P<id>\d+)',
             array(
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( LogsController::class, 'delete_log' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( LogsController::class, 'delete_log' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'id' => array(
                         'required'          => true,
@@ -392,8 +318,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/logs/delete-all',
             array(
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( LogsController::class, 'delete_all_logs' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( LogsController::class, 'delete_all_logs' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
             )
         );
 
@@ -401,8 +329,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE,'/logs/(?P<id>\d+)',
             array(
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( LogsController::class, 'get_log' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( LogsController::class, 'get_log' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'id' => array(
                         'required'          => true,
@@ -416,8 +346,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE,'/logs/stats/over-time',
             array(
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( LogsController::class, 'get_logs_over_time' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( LogsController::class, 'get_logs_over_time' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
             )
         );
 
@@ -425,8 +357,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE,'/logs/stats/by-category',
             array(
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( LogsController::class, 'get_logs_by_category' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( LogsController::class, 'get_logs_by_category' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
             )
         );
 
@@ -434,8 +368,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE,'/logs/stats/top-users',
             array(
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( LogsController::class, 'get_logs_top_users' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( LogsController::class, 'get_logs_top_users' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
             )
         );
 
@@ -443,8 +379,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE,'/logs/stats/top-ips',
             array(
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( LogsController::class, 'get_logs_top_ips' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( LogsController::class, 'get_logs_top_ips' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
             )
         );
 
@@ -452,8 +390,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE,'/logs/stats/hourly-activity',
             array(
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( LogsController::class, 'get_logs_hourly_activity' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( LogsController::class, 'get_logs_hourly_activity' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
             )
         );
 
@@ -461,8 +401,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE,'/logs/bulk-delete',
             array(
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( LogsController::class, 'bulk_delete_logs' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( LogsController::class, 'bulk_delete_logs' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'ids' => array(
                         'required'          => true,
@@ -478,8 +420,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/login-redirects',
             array(
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_login_redirects' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( $this, 'get_login_redirects' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'page'     => array( 'sanitize_callback' => 'absint', 'default' => 1 ),
                     'per_page' => array( 'sanitize_callback' => 'absint', 'default' => 10 ),
@@ -491,8 +435,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/login-redirects',
             array(
                 'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => array( $this, 'create_login_redirect' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( $this, 'create_login_redirect' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'type'       => array( 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ),
                     'value'      => array( 'required' => true, 'sanitize_callback' => 'sanitize_text_field' ),
@@ -506,8 +452,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/login-redirects/(?P<id>\d+)',
             array(
                 'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => array( $this, 'update_login_redirect' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( $this, 'update_login_redirect' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'id'      => array( 'required' => true, 'sanitize_callback' => 'absint' ),
                     'user_id' => array( 'sanitize_callback' => 'absint' ),
@@ -522,8 +470,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/login-redirects/(?P<id>\d+)',
             array(
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( $this, 'delete_login_redirect' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( $this, 'delete_login_redirect' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'id' => array( 'required' => true, 'sanitize_callback' => 'absint' ),
                 ),
@@ -534,8 +484,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/login-redirects/bulk-status',
             array(
                 'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => array( $this, 'bulk_change_login_redirects_status' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( $this, 'bulk_change_login_redirects_status' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'ids'    => array(
                         'required' => true,
@@ -554,8 +506,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/login-redirects/bulk-delete',
             array(
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( $this, 'bulk_delete_login_redirects' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( $this, 'bulk_delete_login_redirects' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'ids' => array(
                         'required' => true,
@@ -571,8 +525,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/2fa-logs',
             array(
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_2fa_logs' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( $this, 'get_2fa_logs' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args' => array(
                     'page' => array(
                         'sanitize_callback' => 'absint',
@@ -607,8 +563,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/2fa-logs/(?P<id>\d+)',
             array(
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( $this, 'delete_2fa_log' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( $this, 'delete_2fa_log' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'id' => array(
                         'required'          => true,
@@ -622,8 +580,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/2fa-logs/bulk-delete',
             array(
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( $this, 'bulk_delete_2fa_logs' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( $this, 'bulk_delete_2fa_logs' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'ids' => array(
                         'required' => true,
@@ -638,8 +598,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/2fa-logs/delete-all',
             array(
                 'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( $this, 'delete_all_2fa_logs' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( $this, 'delete_all_2fa_logs' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
             )
         );
 
@@ -647,8 +609,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/users',
             array(
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_users_for_redirects' ),
-                'permission_callback' => array( $this, 'check_permission' ),
+                'callback'            => array( $this, 'get_users_for_redirects' ),                
+                'permission_callback' => function () {
+                    return current_user_can('manage_options');
+                },
                 'args'                => array(
                     'search'  => array( 'sanitize_callback' => 'sanitize_text_field' ),
                     'per_page' => array( 'sanitize_callback' => 'absint', 'default' => 100 ),
@@ -660,42 +624,10 @@ class Rest_API
         register_rest_route( self::NAMESPACE, '/roles',
             array(
                 'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_roles_for_redirects' ),
-                'permission_callback' => array( $this, 'check_permission' ),
-            )
-        );
-
-        // Get specifications for a product
-        register_rest_route( self::NAMESPACE,'/product/(?P<product_id>\d+)/specifications',
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_product_specifications' ),
+                'callback'            => array( $this, 'get_roles_for_redirects' ),                
                 'permission_callback' => function () {
-                    return current_user_can( 'edit_posts' );
+                    return current_user_can('manage_options');
                 },
-                'args'                => array(
-                    'product_id' => array(
-                        'required'          => true,
-                        'sanitize_callback' => 'absint',
-                    ),
-                ),
-            )
-        );
-
-        // Save specifications for a product
-        register_rest_route( self::NAMESPACE,'/product/(?P<product_id>\d+)/specifications',
-            array(
-                'methods'             => WP_REST_Server::CREATABLE,
-                'callback'            => array( $this, 'save_product_specifications' ),
-                'permission_callback' => function () {
-                    return current_user_can( 'edit_posts' );
-                },
-                'args'                => array(
-                    'product_id' => array(
-                        'required'          => true,
-                        'sanitize_callback' => 'absint',
-                    ),
-                ),
             )
         );
     }
@@ -1041,139 +973,6 @@ class Rest_API
             'message' => __( 'Specifications saved successfully', 'authguard' ),
         ) );
     }
-    /**
-     * Check permission for API access
-     *
-     * @param WP_REST_Request $request Request object.
-     * @return bool
-     */
-    // public function check_permission( $request ) {
-    //     // Change this based on your requirements
-    //     // For development, you might want to allow all users
-    //     // For production, restrict to specific capabilities
-    //     return current_user_can( 'manage_options' );
-    // }
-    /**
-     * Check if user has permission to access the endpoint.
-     *
-     * @param WP_REST_Request $request The request object.
-     * @return bool|WP_Error True if user has permission, WP_Error otherwise.
-     */
-    public function check_permission( WP_REST_Request $request ) {
-
-        // Check if user has capability to manage options (typically administrators)
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return new WP_Error(
-                'rest_forbidden',
-                __( 'You do not have permission to access this endpoint.', 'authguard' ),
-                array( 'status' => 403 )
-            );
-        }
-
-        return true;
-    }
-    
-    // /**
-    //  * Return posts for DataTables (server-side).
-    //  */
-    // public function get_posts( WP_REST_Request $request ) {
-    //     $page     = max( 1, intval( $request->get_param('page') ?: 1 ) );
-    //     $per_page = max( 1, intval( $request->get_param('per_page') ?: 10 ) );
-    //     $status   = sanitize_text_field( $request->get_param('status') ?: 'publish' );
-    //     $search   = sanitize_text_field( $request->get_param('search') ?: '' );
-
-    //     // Sorting
-    //     $orderby_param = strtolower( sanitize_text_field( $request->get_param('orderby') ?: '' ) );
-    //     $order_param   = strtoupper( sanitize_text_field( $request->get_param('order') ?: 'ASC' ) );
-    //     $allowed_orderby = [
-    //         'title' => 'title',
-    //         'date'  => 'date',
-    //         'id'    => 'ID',
-    //     ];
-    //     $orderby = isset( $allowed_orderby[ $orderby_param ] ) ? $allowed_orderby[ $orderby_param ] : 'date';
-    //     $order   = in_array( $order_param, [ 'ASC', 'DESC' ], true ) ? $order_param : 'DESC';
-
-    //     $args = [
-    //         'post_type'      => 'post',
-    //         'post_status'    => $status, // publish|draft|trash|etc
-    //         'posts_per_page' => $per_page,
-    //         'paged'          => $page,
-    //         'orderby'        => $orderby,
-    //         'order'          => $order,
-    //         's'              => $search,
-    //         'no_found_rows'  => false, // we need totals for DataTables
-    //     ];
-
-    //     $query = new WP_Query( $args );
-
-    //     $rows = [];
-    //     foreach ( $query->posts as $post ) {
-    //         $author_id  = $post->post_author;
-    //         $categories = wp_get_post_terms( $post->ID, 'category', [ 'fields' => 'names' ] );
-    //         $tags       = wp_get_post_terms( $post->ID, 'post_tag', [ 'fields' => 'names' ] );
-
-    //         $rows[] = [
-    //             'id'    => $post->ID,
-    //             'title' => get_the_title( $post ),
-    //             'date'  => get_the_date( '', $post ),
-    //             'author'=> [
-    //                 'id'     => $author_id,
-    //                 'name'   => get_the_author_meta( 'display_name', $author_id ),
-    //                 'avatar' => get_avatar_url( $author_id, [ 'size' => 24 ] ),
-    //             ],
-    //             'categories' => $categories ?: [],
-    //             'tags'       => $tags ?: [],
-    //             'status'       => get_post_status($post),
-    //         ];
-    //     }
-
-    //     return [
-    //         'data'  => $rows,
-    //         'total' => (int) $query->found_posts,
-    //         'page'  => (int) $page,
-    //     ];
-    // }
-
-    // /**
-    //  * Change status for a single post.
-    //  */
-    // public function change_post_status( WP_REST_Request $request ) {
-    //     $post_id = (int) $request['id'];
-    //     $status  = sanitize_text_field( $request['status'] );
-
-    //     $updated = wp_update_post([
-    //         'ID'          => $post_id,
-    //         'post_status' => $status,
-    //     ], true );
-
-    //     if ( is_wp_error( $updated ) ) {
-    //         return new WP_Error( 'update_failed', __( 'Failed to update post status', 'authguard' ), [ 'status' => 500 ] );
-    //     }
-
-    //     return [ 'success' => true, 'post_id' => $post_id, 'status' => $status ];
-    // }
-
-    // /**
-    //  * Bulk change status of posts.
-    //  */
-    // public function bulk_change_status( WP_REST_Request $request ) {
-    //     $ids    = $request['ids'];
-    //     $status = sanitize_text_field( $request['status'] );
-
-    //     $updated = [];
-    //     foreach ( $ids as $id ) {
-    //         $result = wp_update_post([
-    //             'ID'          => (int) $id,
-    //             'post_status' => $status,
-    //         ], true );
-
-    //         if ( ! is_wp_error( $result ) ) {
-    //             $updated[] = (int) $id;
-    //         }
-    //     }
-
-    //     return [ 'success' => true, 'updated' => $updated, 'status' => $status ];
-    // }
     
 	public function get_settings(WP_REST_Request $request)
 	{
@@ -1730,55 +1529,6 @@ class Rest_API
 
 		return new WP_REST_Response($response, 200);
 	}
-    /**
-     * Get the deactivation link.
-     *
-     * @param WP_REST_Request $request The request object.
-     * @return WP_REST_Response|WP_Error The response or error.
-     */
-    // public function get_deactivation_link( WP_REST_Request $request ) {
-    //     // Get the encrypted key from options
-    //     $encrypted_key = get_option( 'authguard_deactive_key' );
-
-    //     if ( false === $encrypted_key ) {
-    //         return new WP_Error(
-    //             'key_not_found',
-    //             __( 'Deactivation key not found. Please reactivate the plugin.', 'authguard' ),
-    //             array( 'status' => 404 )
-    //         );
-    //     }
-
-    //     // Decrypt the key
-    //     $decrypted_key = CryptoHelper::decrypt( $encrypted_key );
-
-    //     if ( false === $decrypted_key ) {
-    //         return new WP_Error(
-    //             'decryption_failed',
-    //             __( 'Failed to decrypt deactivation key. Please contact support.', 'authguard' ),
-    //             array( 'status' => 500 )
-    //         );
-    //     }
-
-    //     // Build the deactivation URL
-    //     $deactivation_url = add_query_arg(
-    //         array(
-    //             'action' => 'authguard_deactivate',
-    //             'secret_key' => $decrypted_key,
-    //         ),
-    //         admin_url( 'admin-post.php' )
-    //     );
-
-    //     // Return the response
-    //     return new WP_REST_Response(
-    //         array(
-    //             'success' => true,
-    //             'deactivation_url' => $deactivation_url,
-    //             'message' => __( 'Deactivation link generated successfully.', 'authguard' ),
-    //             'warning' => __( 'This link will only work once. After deactivation, a new link will be generated on reactivation.', 'authguard' ),
-    //         ),
-    //         200
-    //     );
-    // }
 
     public function get_2fa_logs( WP_REST_Request $request ) {
         global $wpdb;

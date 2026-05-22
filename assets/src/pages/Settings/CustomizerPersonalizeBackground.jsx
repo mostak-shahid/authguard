@@ -71,8 +71,8 @@ const CustomizerPersonalizeBackground = () => {
                                 placeholder={__("Background type", "authguard")}
                                 value={localValues?.type}
                                 optionList={[
-                                    { label: __("Image", "authguard"), value: 'image' },
-                                    { label: __("Video", "authguard"), value: 'video' },
+                                    { label: __("Default", "authguard"), value: 'image' },
+                                    { label: __("Video (Pro)", "authguard"), value: 'video', disabled: true } // video option is disabled for now,
                                 ]}
                                 onChange={(value) => handleChange('type', value)}
                             />
