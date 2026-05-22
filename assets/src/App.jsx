@@ -235,7 +235,7 @@ export default function App() {
                                     <IconStar/>
                                 </a> */}
 
-                                <Button 
+                                {/* <Button 
                                     theme='outline' 
                                     icon={<IconCustomerSupport />} 
                                     aria-label={__("Documentation", 'authguard')}
@@ -257,7 +257,8 @@ export default function App() {
                                             '_blank'
                                         )
                                     }
-                                />
+                                /> */}
+
                                 {/* <Badge count={newsItems.filter(item => !readNewsIds.includes(item.id)).length || 0}>
                                     <Button theme='outline' icon={<IconBellStroked />} onClick={() => handleNewsVisible(true)} aria-label="Screenshot" />
                                 </Badge> */}
